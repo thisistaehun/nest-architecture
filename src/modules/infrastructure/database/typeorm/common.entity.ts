@@ -1,6 +1,5 @@
 import {
   BaseEntity,
-  BeforeInsert,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -44,11 +43,6 @@ export abstract class CommonEntity extends BaseEntity {
     nullable: true,
   })
   deletedAt: Date;
-
-  @BeforeInsert()
-  setCreatedAt() {
-    this.updatedAt = null;
-  }
 
   generateCode() {
     this.code = uuid();

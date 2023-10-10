@@ -14,8 +14,8 @@ export class UserResolver {
     return this.userService.create(createUserInput);
   }
 
-  @Query(() => [User], { name: 'user' })
-  findAll() {
+  @Query(() => [User], { name: 'users' })
+  async findAll() {
     return this.userService.findAll();
   }
 
