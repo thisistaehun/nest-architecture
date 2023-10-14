@@ -8,16 +8,17 @@ import { RefreshTokenPayload } from '../type/refresh-token.payload';
 
 @Injectable()
 export class JwtAuthService {
-  private readonly accessTokenSecret: string =
-    envVariables.JWT_ACCESS_TOKEN_SECRET;
-  private readonly refreshTokenSecret: string =
-    envVariables.JWT_REFRESH_TOKEN_SECRET;
-  private readonly accessExpiresIn: string =
-    envVariables.JWT_ACCESS_TOKEN_EXPIRES_IN;
-  private readonly refreshExpiresIn: string =
-    envVariables.JWT_REFRESH_TOKEN_EXPIRES_IN;
+  private readonly accessTokenSecret: string;
+  private readonly refreshTokenSecret: string;
+  private readonly accessExpiresIn: string;
+  private readonly refreshExpiresIn: string;
 
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtService: JwtService) {
+    this.accessTokenSecret = envVariables.JWT_ACCESS_TOKEN_SECRET;
+    this.refreshTokenSecret = envVariables.JWT_REFRESH_TOKEN_SECRET;
+    this.accessExpiresIn = envVariables.JWT_ACCESS_TOKEN_EXPIRES_IN;
+    this.refreshExpiresIn = envVariables.JWT_REFRESH_TOKEN_EXPIRES_IN;
+  }
 
   // TODO : this method should save refresh token at database
   public createAccessAndRefreshToken(user: Partial<User>) {
