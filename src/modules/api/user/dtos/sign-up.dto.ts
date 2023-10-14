@@ -7,7 +7,12 @@ export class SignUpInput extends PickType(User, [
   'nickname',
   'email',
   'password',
-]) {}
+]) {
+  @Field(() => String, {
+    description: '비밀번호 확인',
+  })
+  repassword: string;
+}
 
 @ObjectType()
 export class SignUpOutput {

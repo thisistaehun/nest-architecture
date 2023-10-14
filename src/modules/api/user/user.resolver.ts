@@ -1,8 +1,10 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/modules/infrastructure/auth/decorator/current.user.decorator';
 import { Public } from 'src/modules/infrastructure/auth/decorator/public.decorator';
+import { LoginInput, LoginOutput } from './dtos/login.dto';
 import { SignUpInput, SignUpOutput } from './dtos/sign-up.dto';
 import { User } from './entities/user.entity';
+import { EmailLoginUsecase } from './usecase/login.usecase';
 import { SignUpUsecase } from './usecase/sign-up.usecase';
 import { UserService } from './user.service';
 
@@ -11,6 +13,7 @@ export class UserResolver {
   constructor(
     private readonly userService: UserService,
     private readonly singUpUsecase: SignUpUsecase,
+    private readonly emailLoginUsecase: EmailLoginUsecase,
   ) {}
 
   @Public()
@@ -19,6 +22,14 @@ export class UserResolver {
   })
   signUp(@Args('input') input: SignUpInput): Promise<SignUpOutput> {
     return this.singUpUsecase.execute(input);
+  }
+
+  @Public()
+  @Mutation(() => LoginOutput, {
+    description: '이메일로 로그인 합니다.',
+  })
+  emailLogin(@Args('input') input: LoginInput): Promise<LoginOutput> {
+    return this.emailLoginUsecase.execute(input);
   }
 
   @Query(() => [User], {
