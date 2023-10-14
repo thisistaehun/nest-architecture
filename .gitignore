@@ -39,3 +39,7 @@ lerna-debug.log*
 
 # GraghQL
 schema.gql
+
+# Docker volumes
+/docker/mysql/data
+/docker/redis/data
