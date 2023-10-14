@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateUserInput } from './dtos/create-user.dto';
+import { SignUpInput } from './dtos/create-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -11,12 +11,20 @@ export class UserRepository {
     private readonly ormUserRepo: Repository<User>,
   ) {}
 
-  create(input: CreateUserInput): User {
+  create(input: SignUpInput): User {
     return this.ormUserRepo.create(input);
   }
 
   save(user: User): Promise<User> {
-    return this.ormUserRepo.save(user);
+    try {
+      return this.ormUserRepo.save(user);
+    } catch (error) {
+      console.log('hi');
+      if (error.message.includes('Duplicate')) {
+        throw new Error('이메일 또는 닉네임이 중복됩니다.');
+      }
+      throw error;
+    }
   }
 
   findAll(): Promise<User[]> {
@@ -38,6 +46,12 @@ export class UserRepository {
   findOneByEmail(email: string): Promise<User> {
     return this.ormUserRepo.findOne({
       where: { email },
+    });
+  }
+
+  findOneByNickname(nickname: string): Promise<User> {
+    return this.ormUserRepo.findOne({
+      where: { nickname },
     });
   }
 }
