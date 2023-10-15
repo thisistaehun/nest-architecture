@@ -4,7 +4,6 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { envVariables } from '../../config/env-config';
 
 const getTypeOrmModuleOptions = (): TypeOrmModuleOptions => {
-  console.log(path.resolve(__dirname, '../../../**/*.entity{.ts,.js}'));
   return {
     type: 'mysql',
     host: envVariables.DATABASE_HOST,

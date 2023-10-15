@@ -1,0 +1,27 @@
+# Exclude development dependencies
+node_modules/
+
+# Exclude build artifacts
+dist/
+
+# Exclude MySQL Data
+docker/mysql/data/
+
+
+# Exclude temporary and cache files
+*.log
+*.tmp
+*.pid
+*.yarn-integrity
+
+# Exclude version control system files
+.git
+.gitignore
+
+# Exclude editor-specific files
+.vscode/
+.idea/
+
+# Exclude test and documentation files (if not needed in the image)
+test/
+docs/

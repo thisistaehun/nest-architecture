@@ -1,4 +1,4 @@
-import { Field, InputType, Int, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity } from 'typeorm';
 
@@ -15,10 +15,10 @@ export class User extends CommonEntity {
   email: string;
 
   @Field(() => String, { nullable: false })
+  @Column({ name: 'nickname', type: 'varchar', length: 255, unique: true })
+  nickname: string;
+
+  @Field(() => String, { nullable: false })
   @Column({ name: 'password', type: 'varchar', length: 255 })
   password: string;
-
-  @Field(() => Int, { nullable: false })
-  @Column({ name: 'point', type: 'int', default: 0 })
-  point: number;
 }

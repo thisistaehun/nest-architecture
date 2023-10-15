@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  dg-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        ENVIRONMENT: ${ENVIRONMENT}
+    container_name: dg-server
+    working_dir: /proj
+    volumes:
+      - ./src:/src
+    ports:
+      - ${SERVER_PORT}:${SERVER_PORT}
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    depends_on:
+      - dg-database
+      - dg-redis
+  dg-database:
+    image: mysql:8.0.32
+    container_name: dg-database
+    ports:
+      - ${DATABASE_PORT}:3306
+    environment:
+      - MYSQL_DATABASE=${DATABASE_NAME}
+      - MYSQL_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+    volumes:
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    command:
+      - --default-authentication-plugin=mysql_native_password
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+  dg-redis:
+    image: redis:7
+    container_name: dg-redis
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - ./docker/redis/data:/data
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf --requirepass ${REDIS_PASSWORD}
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
