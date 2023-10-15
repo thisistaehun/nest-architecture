@@ -66,6 +66,9 @@ jobs:
         run: |
           mkdir -p ./config
           echo "$dev_env_content" >> ./config/.env.dev
+      - name: Run test
+        run: yarn test
+        working-directory: ./
 
   build:
     runs-on: ubuntu-20.04
