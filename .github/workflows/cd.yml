@@ -10,6 +10,7 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   DEV_ENV_CONTENT: ${{ vars.DEV_ENV_CONTENT }}
+  DEV_APPLICATION_PATH: ${{ vars.DEV_APPLICATION_PATH }}
 
 jobs:
   deploy:
@@ -30,6 +31,7 @@ jobs:
           key: ${{ env.SSH_KEY }}
           port: 22
           script: |
+            cd ${{ env.DEV_APPLICATION_PATH }}
             mkdir -p ./config
             echo "${{ env.DEV_ENV_CONTENT }}" > ./config/.dev.env
 
@@ -41,6 +43,7 @@ jobs:
           key: ${{ env.SSH_KEY }}
           port: 22
           script: |
+            cd ${{ env.DEV_APPLICATION_PATH }}
             if git pull origin develop; then
               echo "Git pulled successfully"
             else
@@ -54,6 +57,7 @@ jobs:
           key: ${{ env.SSH_KEY }}
           port: 22
           script: |
+            cd ${{ env.DEV_APPLICATION_PATH }}
             if yarn docker:dev; then
               echo "Server restarted successfully"
             else
