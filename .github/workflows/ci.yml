@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  - pull_request
+
+env:
+  dev_env_content: ${{ vars.DEV_ENV_CONTENT }}
+  server_env: ${{ github.ref == 'refs/heads/master' && 'prod' || 'dev' }}
+
+jobs:
+  lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+
+      - name: Cache Dependencies
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --concurrency 4
+        working-directory: ./
+
+      - name: Run format check
+        run: yarn format
+        working-directory: ./
+
+      - name: Run lint check
+        run: yarn lint
+        working-directory: ./
+
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+
+      - name: Cache Dependencies
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --concurrency 4
+        working-directory: ./
+
+      - name: Generate env file
+        run: |
+          mkdir -p ./config
+          echo "$dev_env_content" >> ./config/.env.dev
+      - name: Run test
+        run: yarn test
+        working-directory: ./
+
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 18.x
+
+      - name: Cache Dependencies
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --concurrency 4
+        working-directory: ./
+
+      - name: Build project
+        run: yarn build
+        working-directory: ./

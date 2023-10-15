@@ -1,0 +1,61 @@
+name: Deploy to EC2
+on:
+  push:
+    branches:
+      - develop
+env:
+  ELASTIC_IP: ${{ secrets.ELASTIC_IP }}
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  DEV_ENV_CONTENT: ${{ vars.DEV_ENV_CONTENT }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to EC2
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Copy .env.dev to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.ELASTIC_IP }}
+          username: ubuntu
+          key: ${{ env.SSH_KEY }}
+          port: 22
+          script: |
+            mkdir -p ./config
+            echo "${{ env.DEV_ENV_CONTENT }}" > ./config/.dev.env
+
+      - name: Git pull
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.ELASTIC_IP }}
+          username: ubuntu
+          key: ${{ env.SSH_KEY }}
+          port: 22
+          script: |
+            if git pull origin develop; then
+              echo "Git pulled successfully"
+            else
+              echo "Git pulled failed" && exit 1
+            fi
+      - name: Restart server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.ELASTIC_IP }}
+          username: ubuntu
+          key: ${{ env.SSH_KEY }}
+          port: 22
+          script: |
+            if yarn docker:dev; then
+              echo "Server restarted successfully"
+            else
+              echo "Server restarted failed" && exit 1
+            fi
