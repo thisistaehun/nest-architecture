@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { SignUpInput } from './dtos/sign-up.dto';
+import { SignUpInput } from './dtos/sign-up/input/sign-up.input';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -11,8 +11,9 @@ export class UserRepository {
     private readonly ormUserRepo: Repository<User>,
   ) {}
 
-  create(input: SignUpInput): User {
-    return this.ormUserRepo.create(input);
+  create<T extends SignUpInput>(input: T): User {
+    const user = this.ormUserRepo.create(input);
+    return user;
   }
 
   save(user: User): Promise<User> {
