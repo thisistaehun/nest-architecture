@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
-import { LoginInput, LoginOutput } from '../dtos/login.dto';
+import { EmailLoginInput } from '../dtos/login/input/email-login.input';
+import { LoginOutput } from '../dtos/login/output/login.output';
 import { UserRepository } from '../user.repository';
 
 @Injectable()
@@ -11,7 +12,7 @@ export class EmailLoginUsecase {
     private readonly jwtAuthService: JwtAuthService,
   ) {}
 
-  async execute(input: LoginInput): Promise<LoginOutput> {
+  async execute(input: EmailLoginInput): Promise<LoginOutput> {
     const savedUser = await this.userRepository.findOneByEmail(input.email);
     const passwordConfirmation = bcrypt.compare(
       input.password,
@@ -27,6 +28,7 @@ export class EmailLoginUsecase {
     return {
       accessToken,
       refreshToken,
+      user: savedUser,
     };
   }
 }

@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
-import { SignUpInput, SignUpOutput } from '../dtos/sign-up.dto';
+import { EmailSignUpInput } from '../dtos/sign-up/input/email.sign-up.input';
+import { SignUpOutput } from '../dtos/sign-up/sign-up.dto';
 import { UserRepository } from '../user.repository';
 
 @Injectable()
-export class SignUpUsecase {
+export class EmailSignUpUsecase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtAuthService: JwtAuthService,
   ) {}
-  async execute(input: SignUpInput): Promise<SignUpOutput> {
+  async execute(input: EmailSignUpInput): Promise<SignUpOutput> {
     this.passwordValidation(input);
     await this.checkDuplicated(input);
 
@@ -21,8 +22,6 @@ export class SignUpUsecase {
     const accessToken = this.jwtAuthService.createAccessToken(savedUser);
     const refreshToken = this.jwtAuthService.createRefreshToken(savedUser.code);
 
-    console.log(accessToken, refreshToken);
-    console.log(savedUser);
     return {
       user: savedUser,
       accessToken,
@@ -30,7 +29,7 @@ export class SignUpUsecase {
     };
   }
 
-  private passwordValidation(input: SignUpInput) {
+  private passwordValidation(input: EmailSignUpInput) {
     if (input.password !== input.repassword) {
       throw new Error('비밀번호가 일치하지 않습니다.');
     }
@@ -40,7 +39,7 @@ export class SignUpUsecase {
     }
   }
 
-  private async checkDuplicated(input: SignUpInput): Promise<void> {
+  private async checkDuplicated(input: EmailSignUpInput): Promise<void> {
     const [checkEmailExist, checkNicknameExist] = await Promise.all([
       this.userRepository.findOneByEmail(input.email),
       this.userRepository.findOneByNickname(input.nickname),
