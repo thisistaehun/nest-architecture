@@ -33,7 +33,7 @@ jobs:
           script: |
             cd ${{ env.DEV_APPLICATION_PATH }}
             mkdir -p ./config
-            echo "${{ env.DEV_ENV_CONTENT }}" > ./config/.dev.env
+            echo "${{ env.DEV_ENV_CONTENT }}" > ./config/.env.dev
 
       - name: Git pull
         uses: appleboy/ssh-action@master
