@@ -6,4 +6,5 @@ export class SignUpInput extends PickType(User, [
   'name',
   'nickname',
   'email',
+  'phoneNumber',
 ]) {}

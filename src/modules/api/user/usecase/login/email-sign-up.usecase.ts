@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
-import { EmailSignUpInput } from '../dtos/sign-up/input/email.sign-up.input';
-import { SignUpOutput } from '../dtos/sign-up/sign-up.dto';
-import { UserRepository } from '../user.repository';
+import { EmailSignUpInput } from '../../dtos/sign-up/input/email.sign-up.input';
+import { SignUpOutput } from '../../dtos/sign-up/sign-up.dto';
+import { UserRepository } from '../../user.repository';
 
 @Injectable()
 export class EmailSignUpUsecase {

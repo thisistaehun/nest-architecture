@@ -3,11 +3,11 @@ import axios from 'axios';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
 import { envVariables } from 'src/modules/infrastructure/config/env-config';
 
-import { SocialLoginInput } from '../dtos/login/input/social-login.input';
-import { SocialLoginOutput } from '../dtos/login/output/social-login.output';
-import { User } from '../entities/user.entity';
-import { LoginType } from '../type/login.type';
-import { UserRepository } from '../user.repository';
+import { SocialLoginInput } from '../../dtos/login/input/social-login.input';
+import { SocialLoginOutput } from '../../dtos/login/output/social-login.output';
+import { User } from '../../entities/user.entity';
+import { LoginType } from '../../type/login.type';
+import { UserRepository } from '../../user.repository';
 
 @Injectable()
 export class SocialLoginUsecase {

@@ -16,6 +16,11 @@ export const getEnvVariables = (): EnvVariables => {
     DATABASE_USER: env.DATABASE_USER,
     DATABASE_PASSWORD: env.DATABASE_PASSWORD,
 
+    // REDIS
+    REDIS_HOST: env.REDIS_HOST,
+    REDIS_PORT: Number(env.REDIS_PORT),
+    REDIS_PASSWORD: env.REDIS_PASSWORD,
+
     // JWT
     JWT_ACCESS_TOKEN_SECRET: env.JWT_ACCESS_TOKEN_SECRET,
     JWT_REFRESH_TOKEN_SECRET: env.JWT_ACCESS_TOKEN_SECRET,
@@ -25,6 +30,11 @@ export const getEnvVariables = (): EnvVariables => {
     // OAUTH
     KAKAO_GET_PROFILE_URL: env.KAKAO_GET_PROFILE_URL,
     NAVER_GET_PROFILE_URL: env.NAVER_GET_PROFILE_URL,
+
+    // AWS
+    AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
+    AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
+    AWS_REGION: env.AWS_REGION,
   };
 
   checkUndefinedVars();
