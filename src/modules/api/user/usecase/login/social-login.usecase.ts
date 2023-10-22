@@ -1,52 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
-import { envVariables } from 'src/modules/infrastructure/config/env-config';
 
 import { SocialLoginInput } from '../../dtos/login/input/social-login.input';
 import { SocialLoginOutput } from '../../dtos/login/output/social-login.output';
 import { User } from '../../entities/user.entity';
 import { LoginType } from '../../type/login.type';
 import { UserRepository } from '../../user.repository';
+import { SocialProfileProvider } from './social-profile.provider';
 
 @Injectable()
 export class SocialLoginUsecase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtAuthService: JwtAuthService,
+    private readonly socialProfileProvider: SocialProfileProvider,
   ) {}
 
   async execute(input: SocialLoginInput): Promise<SocialLoginOutput> {
-    const { type, token } = input;
-    const result = await axios.get(envVariables.KAKAO_GET_PROFILE_URL, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
-      },
-      params: {
-        property_keys: ['kakao_account.email'],
-      },
-    });
+    const profile = await this.socialProfileProvider.getProfile(input);
 
-    const savedUser = await this.userRepository.findOneByEmail(
-      result.data.kakao_account.email,
-    );
+    const savedUser = await this.userRepository.findOneByEmail(profile.email);
     if (savedUser) {
-      return this.handleExistingUser(type, savedUser);
+      return this.handleExistingUser(input.type, savedUser);
     } else {
       return this.createNewUser(
-        type,
-        result.data.kakao_account.email,
-        result.data.properties.nickname,
-        result.data.id,
+        input.type,
+        profile.email,
+        profile.name,
+        profile.socialId,
       );
     }
-
-    return {
-      user: null,
-      accessToken: '',
-      refreshToken: '',
-    };
   }
 
   private async createNewUser(
