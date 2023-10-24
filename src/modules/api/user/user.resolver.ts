@@ -8,10 +8,15 @@ import { LoginOutput } from './dtos/login/output/login.output';
 import { SocialLoginOutput } from './dtos/login/output/social-login.output';
 import { EmailSignUpInput } from './dtos/sign-up/input/email.sign-up.input';
 import { SignUpOutput } from './dtos/sign-up/sign-up.dto';
+import { WithdrawInput } from './dtos/withdraw/input/withdraw.input';
+import { WithdrawOutput } from './dtos/withdraw/output/withdraw.output';
 import { User } from './entities/user.entity';
-import { EmailLoginUsecase } from './usecase/email-login';
-import { EmailSignUpUsecase } from './usecase/email-sign-up.usecase';
-import { SocialLoginUsecase } from './usecase/social-login.usecase';
+import { UserAuth } from './type/user.auth.type';
+import { EmailLoginUsecase } from './usecase/login/email-login';
+import { EmailSignUpUsecase } from './usecase/login/email-sign-up.usecase';
+import { SocialLoginUsecase } from './usecase/login/social-login.usecase';
+import { SendMessageForWithdrawUsecase } from './usecase/withdraw/send-message-for-withdraw.usecase';
+import { WithdrawUsecase } from './usecase/withdraw/withdraw.usecase';
 import { UserService } from './user.service';
 
 @Resolver(() => User)
@@ -21,6 +26,8 @@ export class UserResolver {
     private readonly singUpUsecase: EmailSignUpUsecase,
     private readonly emailLoginUsecase: EmailLoginUsecase,
     private readonly socialLoginUsecase: SocialLoginUsecase,
+    private readonly sendMessageForWithdrawUsecase: SendMessageForWithdrawUsecase,
+    private readonly withdrawUsecase: WithdrawUsecase,
   ) {}
 
   @Public()
@@ -47,6 +54,20 @@ export class UserResolver {
     @Args('input') input: SocialLoginInput,
   ): Promise<SocialLoginOutput> {
     return this.socialLoginUsecase.execute(input);
+  }
+
+  @Mutation(() => Boolean, {
+    description: '회원탈퇴를 위해 인증 코드를 저장합니다.',
+  })
+  sendMessageForWithdraw(@CurrentUser() user: UserAuth): Promise<boolean> {
+    return this.sendMessageForWithdrawUsecase.execute(user);
+  }
+
+  @Mutation(() => WithdrawOutput, {
+    description: '인증코드를 확인하여 회원탈퇴를 합니다.',
+  })
+  withdraw(@CurrentUser() user: UserAuth, @Args('input') input: WithdrawInput) {
+    return this.withdrawUsecase.execute(input, user);
   }
 
   @Query(() => [User], {

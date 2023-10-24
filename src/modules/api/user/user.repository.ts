@@ -55,4 +55,12 @@ export class UserRepository {
       where: { nickname },
     });
   }
+
+  async softDelete(code: string): Promise<boolean> {
+    await this.ormUserRepo.softDelete({
+      code,
+    });
+
+    return true;
+  }
 }

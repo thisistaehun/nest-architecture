@@ -11,6 +11,11 @@ export type EnvVariables = {
   DATABASE_USER: string;
   DATABASE_PASSWORD: string;
 
+  // REDIS
+  REDIS_HOST: string;
+  REDIS_PORT: number;
+  REDIS_PASSWORD: string;
+
   // JWT
   JWT_ACCESS_TOKEN_SECRET: string;
   JWT_REFRESH_TOKEN_SECRET: string;
@@ -20,4 +25,9 @@ export type EnvVariables = {
   // OAUTH
   KAKAO_GET_PROFILE_URL: string;
   NAVER_GET_PROFILE_URL: string;
+
+  // AWS
+  AWS_ACCESS_KEY_ID: string;
+  AWS_SECRET_ACCESS_KEY: string;
+  AWS_REGION: string;
 };
