@@ -25,6 +25,7 @@ export type EnvVariables = {
   // OAUTH
   KAKAO_GET_PROFILE_URL: string;
   NAVER_GET_PROFILE_URL: string;
+  GOOGLE_GET_PROFILE_URL: string;
 
   // AWS
   AWS_ACCESS_KEY_ID: string;

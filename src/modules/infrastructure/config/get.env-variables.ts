@@ -30,6 +30,7 @@ export const getEnvVariables = (): EnvVariables => {
     // OAUTH
     KAKAO_GET_PROFILE_URL: env.KAKAO_GET_PROFILE_URL,
     NAVER_GET_PROFILE_URL: env.NAVER_GET_PROFILE_URL,
+    GOOGLE_GET_PROFILE_URL: env.GOOGLE_GET_PROFILE_URL,
 
     // AWS
     AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
