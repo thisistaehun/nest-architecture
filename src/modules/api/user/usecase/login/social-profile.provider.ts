@@ -69,8 +69,8 @@ export class SocialProfileProvider {
 
     const profile = {
       email: result.data.email,
-      name: result.data.name,
-      socialId: result.data.sub,
+      name: '구글 사용자',
+      socialId: result.data.id,
     };
 
     return profile;

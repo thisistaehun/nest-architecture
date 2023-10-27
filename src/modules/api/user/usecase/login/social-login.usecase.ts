@@ -18,6 +18,7 @@ export class SocialLoginUsecase {
 
   async execute(input: SocialLoginInput): Promise<SocialLoginOutput> {
     const profile = await this.socialProfileProvider.getProfile(input);
+    
 
     const savedUser = await this.userRepository.findOneByEmail(profile.email);
     if (savedUser) {
