@@ -17,7 +17,10 @@ export class PointTransaction extends CommonEntity {
   @Column({ name: 'transaction_type', type: 'varchar', length: 45 })
   transactionType: PointTransactionType;
 
-  @ManyToOne(() => TotalPoint, (point: TotalPoint) => point.pointTransactions)
+  @ManyToOne(() => TotalPoint, (point: TotalPoint) => point.pointTransactions, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'point_id' })
   point: TotalPoint;
 }
