@@ -7,6 +7,7 @@ import { EnvConfigModule } from './modules/infrastructure/config/env-config.modu
 import { DatabaseModule } from './modules/infrastructure/database/database.module';
 import { gqlModuleAsyncOptions } from './modules/infrastructure/graphql/graphql.config';
 import { TransactionMiddleware } from './modules/infrastructure/transaction/transaction.middleware';
+import { TransactionModule } from './modules/infrastructure/transaction/transaction.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TransactionMiddleware } from './modules/infrastructure/transaction/tran
     UserModule,
     AuthModule,
     AwsModule,
+    TransactionModule,
   ],
 })
 export class AppModule implements NestModule {

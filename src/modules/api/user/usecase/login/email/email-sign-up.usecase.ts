@@ -1,23 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { IUsecase } from 'src/interface/usecase/usecase.interface';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
+import {
+  USER_COMMAND_REPOSITORY,
+  USER_QUERY_REPOSITORY,
+} from '../../../../../../symbols';
+import { UserCommandRepository } from '../../../cqrs/command/user.command.repository';
+import { UserQueryRepository } from '../../../cqrs/query/user.query.repository';
 import { EmailSignUpInput } from '../../../dtos/sign-up/input/email.sign-up.input';
 import { SignUpOutput } from '../../../dtos/sign-up/sign-up.dto';
-import { UserRepository } from '../../../user.repository';
 
 @Injectable()
-export class EmailSignUpUsecase {
+export class EmailSignUpUsecase
+  implements IUsecase<EmailSignUpInput, SignUpOutput>
+{
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(USER_QUERY_REPOSITORY)
+    private readonly userRepository: UserQueryRepository,
     private readonly jwtAuthService: JwtAuthService,
+    @Inject(USER_COMMAND_REPOSITORY)
+    private readonly userCommandRepository: UserCommandRepository,
   ) {}
   async execute(input: EmailSignUpInput): Promise<SignUpOutput> {
     this.passwordValidation(input);
-    await this.checkDuplicated(input);
 
     const hashPassword = await bcrypt.hash(input.password, 10);
     input.password = hashPassword;
-    const savedUser = await this.userRepository.signUpTransaction(input);
+    const savedUser = await this.userCommandRepository.signUpTransaction(input);
     const accessToken = this.jwtAuthService.createAccessToken(savedUser);
     const refreshToken = this.jwtAuthService.createRefreshToken(savedUser.code);
 
@@ -35,21 +45,6 @@ export class EmailSignUpUsecase {
 
     if (input.password.length < 8) {
       throw new Error('비밀번호는 8자리 이상이어야 합니다.');
-    }
-  }
-
-  private async checkDuplicated(input: EmailSignUpInput): Promise<void> {
-    const [checkEmailExist, checkNicknameExist] = await Promise.all([
-      this.userRepository.findOneByEmail(input.email),
-      this.userRepository.findOneByNickname(input.nickname),
-    ]);
-
-    if (checkEmailExist) {
-      throw new Error('이미 존재하는 이메일입니다.');
-    }
-
-    if (checkNicknameExist) {
-      throw new Error('이미 존재하는 닉네임입니다.');
     }
   }
 }

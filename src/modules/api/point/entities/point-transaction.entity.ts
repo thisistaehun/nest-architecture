@@ -22,5 +22,5 @@ export class PointTransaction extends CommonEntity {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'point_id' })
-  point: TotalPoint;
+  totalPoint: TotalPoint;
 }

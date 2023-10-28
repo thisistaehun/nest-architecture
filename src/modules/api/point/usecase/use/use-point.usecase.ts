@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PointRepository } from '../../point.repository';
+import { PointQueryRepository } from '../../cqrs/query/point.query.repository';
 
 @Injectable()
 export class UsePointUsecase {
-  constructor(private readonly pointRepository: PointRepository) {}
+  constructor(private readonly pointRepository: PointQueryRepository) {}
 }

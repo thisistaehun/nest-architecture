@@ -1,9 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { UserRepository } from './user.repository';
+import { Inject, Injectable } from '@nestjs/common';
+import { USER_QUERY_REPOSITORY } from '../../../symbols';
+import { UserQueryRepository } from './cqrs/query/user.query.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @Inject(USER_QUERY_REPOSITORY)
+    private readonly userRepository: UserQueryRepository,
+  ) {}
 
   findAll() {
     return this.userRepository.findAll();

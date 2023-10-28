@@ -60,6 +60,9 @@ export class User extends CommonEntity {
   })
   phoneNumber?: string;
 
-  @OneToOne(() => TotalPoint, (point: TotalPoint) => point.user)
+  @OneToOne(() => TotalPoint, (point: TotalPoint) => point.user, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   point: TotalPoint;
 }

@@ -14,7 +14,7 @@ import { WithdrawInput } from './dtos/withdraw/input/withdraw.input';
 import { WithdrawOutput } from './dtos/withdraw/output/withdraw.output';
 import { User } from './entities/user.entity';
 import { UserAuth } from './type/user.auth.type';
-import { EmailLoginUsecase } from './usecase/login/email/email-login';
+import { EmailLoginUsecase } from './usecase/login/email/email-login.usecase';
 import { EmailSignUpUsecase } from './usecase/login/email/email-sign-up.usecase';
 import { SocialLoginUsecase } from './usecase/login/social/social-login.usecase';
 import { UpdateUserUsecase } from './usecase/update/update-user.usecase';
@@ -85,7 +85,7 @@ export class UserResolver {
     @CurrentUser() userAuth: UserAuth,
     @Args('input') input: VerificationInput,
   ): Promise<User> {
-    return this.verificationUsecase.execute(userAuth, input);
+    return this.verificationUsecase.execute(input, userAuth);
   }
 
   @Mutation(() => Boolean, {

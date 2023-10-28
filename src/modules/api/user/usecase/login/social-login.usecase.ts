@@ -1,19 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
 
+import { IUsecase } from 'src/interface/usecase/usecase.interface';
+import {
+  USER_COMMAND_REPOSITORY,
+  USER_QUERY_REPOSITORY,
+} from '../../../../../symbols';
+import { UserCommandRepository } from '../../cqrs/command/user.command.repository';
+import { UserQueryRepository } from '../../cqrs/query/user.query.repository';
 import { SocialLoginInput } from '../../dtos/login/input/social-login.input';
 import { SocialLoginOutput } from '../../dtos/login/output/social-login.output';
 import { User } from '../../entities/user.entity';
 import { LoginType } from '../../type/login.type';
-import { UserRepository } from '../../user.repository';
 import { SocialProfileProvider } from './social/social-profile.provider';
 
 @Injectable()
-export class SocialLoginUsecase {
+export class SocialLoginUsecase
+  implements IUsecase<SocialLoginInput, SocialLoginOutput>
+{
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(USER_QUERY_REPOSITORY)
+    private readonly userRepository: UserQueryRepository,
     private readonly jwtAuthService: JwtAuthService,
     private readonly socialProfileProvider: SocialProfileProvider,
+    @Inject(USER_COMMAND_REPOSITORY)
+    private readonly userCommandRepository: UserCommandRepository,
   ) {}
 
   async execute(input: SocialLoginInput): Promise<SocialLoginOutput> {
@@ -38,7 +49,7 @@ export class SocialLoginUsecase {
     nickname: string,
     socialId: string,
   ) {
-    const savedUser = await this.userRepository.signUpTransaction({
+    const savedUser = await this.userCommandRepository.signUpTransaction({
       name: nickname,
       email,
       nickname,
