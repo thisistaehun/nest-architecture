@@ -6,7 +6,7 @@ import { UserAuth } from '../../type/user.auth.type';
 import { UserRepository } from '../../user.repository';
 
 @Injectable()
-export class SendMessageForWithdrawUsecase {
+export class SendMessageForVerificationUsecase {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly snsService: AwsSnsService,
@@ -14,21 +14,22 @@ export class SendMessageForWithdrawUsecase {
     private readonly utilService: UtilService,
   ) {}
 
-  async execute(user: UserAuth) {
+  public async execute(user: UserAuth, phoneNumber: string): Promise<boolean> {
     const targetUser = await this.userRepository.findOneByCode(user.code);
     const authorizeCode = this.utilService.createRandomSixDigitNumber();
+
     await this.snsService.sendMessage(
-      '+82' + targetUser.phoneNumber,
+      '+82' + phoneNumber,
       `
-      [너두 마케터]
-      회원 탈퇴를 위한 인증번호는 ${authorizeCode} 입니다.
-      `,
+    [너두 마케터]
+    회원 인증을 위한 인증번호는 ${authorizeCode} 입니다.
+    `,
     );
 
     await this.redisService.set(
-      `withdraw-${targetUser.code}`,
+      `sign-up::${targetUser.code}::${phoneNumber}`,
       authorizeCode,
-      1000 * 60 * 3,
+      1000 * 60 * 30,
     );
 
     return true;

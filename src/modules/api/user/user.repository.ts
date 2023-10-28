@@ -56,6 +56,20 @@ export class UserRepository {
     });
   }
 
+  async update(code: string, input: Partial<User>): Promise<User> {
+    const updateResult = await this.ormUserRepo.update(
+      {
+        code,
+      },
+      input,
+    );
+    if (updateResult.affected === 0) {
+      throw new Error('해당하는 유저가 없습니다.');
+    }
+
+    return this.findOneByCode(code);
+  }
+
   async softDelete(code: string): Promise<boolean> {
     await this.ormUserRepo.softDelete({
       code,

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
 
-import { SocialLoginInput } from '../../dtos/login/input/social-login.input';
-import { SocialLoginOutput } from '../../dtos/login/output/social-login.output';
-import { User } from '../../entities/user.entity';
-import { LoginType } from '../../type/login.type';
-import { UserRepository } from '../../user.repository';
-import { SocialProfileProvider } from './social/social-profile.provider';
+import { SocialLoginInput } from '../../../dtos/login/input/social-login.input';
+import { SocialLoginOutput } from '../../../dtos/login/output/social-login.output';
+import { User } from '../../../entities/user.entity';
+import { LoginType } from '../../../type/login.type';
+import { UserRepository } from '../../../user.repository';
+import { SocialProfileProvider } from './social-profile.provider';
 
 @Injectable()
 export class SocialLoginUsecase {
