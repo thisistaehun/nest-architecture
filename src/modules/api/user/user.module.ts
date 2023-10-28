@@ -10,6 +10,7 @@ import { EmailLoginUsecase } from './usecase/login/email/email-login';
 import { EmailSignUpUsecase } from './usecase/login/email/email-sign-up.usecase';
 import { SocialLoginUsecase } from './usecase/login/social/social-login.usecase';
 import { SocialProfileProvider } from './usecase/login/social/social-profile.provider';
+import { UpdateUserUsecase } from './usecase/update/update-user.usecase';
 import { SendMessageForVerificationUsecase } from './usecase/verification/send-message-for-verification.usecase';
 import { VerficationUsecase } from './usecase/verification/verification.usecase';
 import { SendMessageForWithdrawUsecase } from './usecase/withdraw/send-message-for-withdraw.usecase';
@@ -42,6 +43,7 @@ import { UserService } from './user.service';
     WithdrawUsecase,
     VerficationUsecase,
     SocialProfileProvider,
+    UpdateUserUsecase,
   ],
 })
 export class UserModule {}

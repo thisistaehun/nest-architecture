@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SignUpInput } from './dtos/sign-up/input/sign-up.input';
+import { UpdateUserInput } from './dtos/update/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -56,7 +57,7 @@ export class UserRepository {
     });
   }
 
-  async update(code: string, input: Partial<User>): Promise<User> {
+  async update(code: string, input: UpdateUserInput): Promise<User> {
     const updateResult = await this.ormUserRepo.update(
       {
         code,

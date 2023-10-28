@@ -8,6 +8,7 @@ import { LoginOutput } from './dtos/login/output/login.output';
 import { SocialLoginOutput } from './dtos/login/output/social-login.output';
 import { EmailSignUpInput } from './dtos/sign-up/input/email.sign-up.input';
 import { SignUpOutput } from './dtos/sign-up/sign-up.dto';
+import { UpdateUserInput } from './dtos/update/update-user.dto';
 import { VerificationInput } from './dtos/verification/verification.input';
 import { WithdrawInput } from './dtos/withdraw/input/withdraw.input';
 import { WithdrawOutput } from './dtos/withdraw/output/withdraw.output';
@@ -16,6 +17,7 @@ import { UserAuth } from './type/user.auth.type';
 import { EmailLoginUsecase } from './usecase/login/email/email-login';
 import { EmailSignUpUsecase } from './usecase/login/email/email-sign-up.usecase';
 import { SocialLoginUsecase } from './usecase/login/social/social-login.usecase';
+import { UpdateUserUsecase } from './usecase/update/update-user.usecase';
 import { SendMessageForVerificationUsecase } from './usecase/verification/send-message-for-verification.usecase';
 import { VerficationUsecase } from './usecase/verification/verification.usecase';
 import { SendMessageForWithdrawUsecase } from './usecase/withdraw/send-message-for-withdraw.usecase';
@@ -33,6 +35,7 @@ export class UserResolver {
     private readonly sendMessageForVerificationUsecase: SendMessageForVerificationUsecase,
     private readonly withdrawUsecase: WithdrawUsecase,
     private readonly verificationUsecase: VerficationUsecase,
+    private readonly updateUserUsecase: UpdateUserUsecase,
   ) {}
 
   @Public()
@@ -97,6 +100,13 @@ export class UserResolver {
   })
   withdraw(@CurrentUser() user: UserAuth, @Args('input') input: WithdrawInput) {
     return this.withdrawUsecase.execute(input, user);
+  }
+
+  @Mutation(() => User, {
+    description: '회원정보를 수정합니다.',
+  })
+  update(@CurrentUser() user: UserAuth, @Args('input') input: UpdateUserInput) {
+    return this.updateUserUsecase.execute(user, input);
   }
 
   @Query(() => [User], {
