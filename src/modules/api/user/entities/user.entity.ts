@@ -1,6 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
+import { TotalPoint } from '../../point/entities/total-point.entity';
 import { LoginType } from '../type/login.type';
 import { UserRole } from '../type/user.role';
 
@@ -9,15 +10,15 @@ import { UserRole } from '../type/user.role';
 @Entity({ name: 'user' })
 export class User extends CommonEntity {
   @Field(() => String, { nullable: false })
-  @Column({ name: 'name', type: 'varchar', length: 255 })
+  @Column({ name: 'name', type: 'varchar', length: 45 })
   name: string;
 
   @Field(() => String, { nullable: false })
-  @Column({ name: 'email', type: 'varchar', length: 255, unique: true })
+  @Column({ name: 'email', type: 'varchar', length: 100, unique: true })
   email: string;
 
   @Field(() => String, { nullable: false })
-  @Column({ name: 'nickname', type: 'varchar', length: 255 })
+  @Column({ name: 'nickname', type: 'varchar', length: 100 })
   nickname: string;
 
   @Field(() => String, { nullable: true })
@@ -25,7 +26,7 @@ export class User extends CommonEntity {
   password?: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ name: 'team', type: 'varchar', length: 255, nullable: true })
+  @Column({ name: 'team', type: 'varchar', length: 100, nullable: true })
   team?: string;
 
   @Field(() => LoginType, { nullable: false, defaultValue: LoginType.EMAIL })
@@ -58,4 +59,7 @@ export class User extends CommonEntity {
     nullable: true,
   })
   phoneNumber?: string;
+
+  @OneToOne(() => TotalPoint, (point: TotalPoint) => point.user)
+  point: TotalPoint;
 }
