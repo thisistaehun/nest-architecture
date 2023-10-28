@@ -5,6 +5,7 @@ import { AuthModule } from 'src/modules/infrastructure/auth/auth.module';
 import { AwsModule } from 'src/modules/infrastructure/aws/aws.module';
 import { envVariables } from 'src/modules/infrastructure/config/env-config';
 import { RedisModule } from 'src/modules/infrastructure/redis/redis.module';
+import { TotalPoint } from '../point/entities/total-point.entity';
 import { User } from './entities/user.entity';
 import { EmailLoginUsecase } from './usecase/login/email/email-login';
 import { EmailSignUpUsecase } from './usecase/login/email/email-sign-up.usecase';
@@ -22,7 +23,7 @@ import { UserService } from './user.service';
 @Module({
   imports: [
     UtilModule,
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, TotalPoint]),
     AuthModule,
     AwsModule,
     RedisModule.register({

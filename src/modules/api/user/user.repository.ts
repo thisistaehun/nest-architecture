@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Transactional } from 'src/modules/infrastructure/transaction/transaction.decorator';
 import { Repository } from 'typeorm';
+import { TotalPoint } from '../point/entities/total-point.entity';
 import { SignUpInput } from './dtos/sign-up/input/sign-up.input';
 import { UpdateUserInput } from './dtos/update/update-user.dto';
 import { User } from './entities/user.entity';
@@ -10,18 +12,36 @@ export class UserRepository {
   constructor(
     @InjectRepository(User)
     private readonly ormUserRepo: Repository<User>,
+    @InjectRepository(TotalPoint)
+    private readonly ormTotalPointRepo: Repository<TotalPoint>,
   ) {}
 
-  create<T extends SignUpInput>(input: T): User {
+  @Transactional()
+  public async signUpTransaction<T extends SignUpInput>(
+    input: T,
+    cb?: (user: User) => Promise<void>,
+  ): Promise<User> {
+    const user = this.create(input);
+    await this.save(user);
+    const totalPoint = this.ormTotalPointRepo.create({
+      user,
+    });
+    await this.ormTotalPointRepo.save(totalPoint);
+    if (cb) {
+      await cb(user);
+    }
+    return user;
+  }
+
+  private create<T extends SignUpInput>(input: T): User {
     const user = this.ormUserRepo.create(input);
     return user;
   }
 
-  save(user: User): Promise<User> {
+  private save(user: User): Promise<User> {
     try {
       return this.ormUserRepo.save(user);
     } catch (error) {
-      console.log('hi');
       if (error.message.includes('Duplicate')) {
         throw new Error('이메일 또는 닉네임이 중복됩니다.');
       }

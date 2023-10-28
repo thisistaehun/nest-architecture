@@ -38,7 +38,7 @@ export class SocialLoginUsecase {
     nickname: string,
     socialId: string,
   ) {
-    const user = this.userRepository.create({
+    const savedUser = await this.userRepository.signUpTransaction({
       name: nickname,
       email,
       nickname,
@@ -46,10 +46,8 @@ export class SocialLoginUsecase {
       loginType: type,
     });
 
-    const savedUser = await this.userRepository.save(user);
-
     const { accessToken, refreshToken } =
-      this.jwtAuthService.createAccessAndRefreshToken(user);
+      this.jwtAuthService.createAccessAndRefreshToken(savedUser);
 
     return {
       user: savedUser,

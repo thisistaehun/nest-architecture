@@ -17,8 +17,7 @@ export class EmailSignUpUsecase {
 
     const hashPassword = await bcrypt.hash(input.password, 10);
     input.password = hashPassword;
-    const user = this.userRepository.create(input);
-    const savedUser = await this.userRepository.save(user);
+    const savedUser = await this.userRepository.signUpTransaction(input);
     const accessToken = this.jwtAuthService.createAccessToken(savedUser);
     const refreshToken = this.jwtAuthService.createRefreshToken(savedUser.code);
 
