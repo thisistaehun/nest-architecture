@@ -14,17 +14,16 @@ export class TotalPoint extends CommonEntity {
   @Column({ name: 'paid_point', type: 'bigint', default: 0 })
   paidPoint: number;
 
-  @OneToOne(() => User, (user: User) => user.point)
+  @OneToOne(() => User, (user: User) => user.point, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
   @OneToMany(
     () => PointTransaction,
     (pointTransaction: PointTransaction) => pointTransaction.totalPoint,
-    {
-      onDelete: 'CASCADE',
-      onUpdate: 'CASCADE',
-    },
   )
   pointTransactions: PointTransaction[];
 }

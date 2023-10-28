@@ -5,6 +5,7 @@ import { PointCommandRepository } from './cqrs/command/point.command.repository'
 import { PointQueryRepository } from './cqrs/query/point.query.repository';
 import { PointTransaction } from './entities/point-transaction.entity';
 import { TotalPoint } from './entities/total-point.entity';
+import { PointResolver } from './point.resolver';
 import { ChargePointUsecase } from './usecase/charge/charge-point.usecase';
 import { UsePointUsecase } from './usecase/use/use-point.usecase';
 
@@ -21,6 +22,7 @@ import { UsePointUsecase } from './usecase/use/use-point.usecase';
     },
     UsePointUsecase,
     ChargePointUsecase,
+    PointResolver,
   ],
 })
 export class PointModule {}
