@@ -17,7 +17,7 @@ export class User extends CommonEntity {
   email: string;
 
   @Field(() => String, { nullable: false })
-  @Column({ name: 'nickname', type: 'varchar', length: 255, unique: true })
+  @Column({ name: 'nickname', type: 'varchar', length: 255 })
   nickname: string;
 
   @Field(() => String, { nullable: true })
