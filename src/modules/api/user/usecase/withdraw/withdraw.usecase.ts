@@ -1,14 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { IUsecase } from 'src/interface/usecase/usecase.interface';
 import { RedisService } from 'src/modules/infrastructure/redis/redis.service';
+import {
+  USER_COMMAND_REPOSITORY,
+  USER_QUERY_REPOSITORY,
+} from '../../../../../symbols';
+import { UserCommandRepository } from '../../cqrs/command/user.command.repository';
+import { UserQueryRepository } from '../../cqrs/query/user.query.repository';
 import { WithdrawInput } from '../../dtos/withdraw/input/withdraw.input';
 import { WithdrawOutput } from '../../dtos/withdraw/output/withdraw.output';
 import { UserAuth } from '../../type/user.auth.type';
-import { UserRepository } from '../../user.repository';
 
 @Injectable()
-export class WithdrawUsecase {
+export class WithdrawUsecase
+  implements IUsecase<WithdrawInput, WithdrawOutput>
+{
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(USER_QUERY_REPOSITORY)
+    private readonly userRepository: UserQueryRepository,
+    @Inject(USER_COMMAND_REPOSITORY)
+    private readonly userCommandRepository: UserCommandRepository,
     private readonly redisService: RedisService,
   ) {}
 
@@ -27,7 +38,7 @@ export class WithdrawUsecase {
       throw new Error('인증 코드가 일치하지 않습니다.');
     }
 
-    const success = await this.userRepository.softDelete(code);
+    const success = await this.userCommandRepository.softDelete(code);
 
     return {
       success,

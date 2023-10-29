@@ -8,13 +8,18 @@ import { LoginOutput } from './dtos/login/output/login.output';
 import { SocialLoginOutput } from './dtos/login/output/social-login.output';
 import { EmailSignUpInput } from './dtos/sign-up/input/email.sign-up.input';
 import { SignUpOutput } from './dtos/sign-up/sign-up.dto';
+import { UpdateUserInput } from './dtos/update/update-user.dto';
+import { VerificationInput } from './dtos/verification/verification.input';
 import { WithdrawInput } from './dtos/withdraw/input/withdraw.input';
 import { WithdrawOutput } from './dtos/withdraw/output/withdraw.output';
 import { User } from './entities/user.entity';
 import { UserAuth } from './type/user.auth.type';
-import { EmailLoginUsecase } from './usecase/login/email-login';
-import { EmailSignUpUsecase } from './usecase/login/email-sign-up.usecase';
-import { SocialLoginUsecase } from './usecase/login/social-login.usecase';
+import { EmailLoginUsecase } from './usecase/login/email/email-login.usecase';
+import { EmailSignUpUsecase } from './usecase/login/email/email-sign-up.usecase';
+import { SocialLoginUsecase } from './usecase/login/social/social-login.usecase';
+import { UpdateUserUsecase } from './usecase/update/update-user.usecase';
+import { SendMessageForVerificationUsecase } from './usecase/verification/send-message-for-verification.usecase';
+import { VerficationUsecase } from './usecase/verification/verification.usecase';
 import { SendMessageForWithdrawUsecase } from './usecase/withdraw/send-message-for-withdraw.usecase';
 import { WithdrawUsecase } from './usecase/withdraw/withdraw.usecase';
 import { UserService } from './user.service';
@@ -27,7 +32,10 @@ export class UserResolver {
     private readonly emailLoginUsecase: EmailLoginUsecase,
     private readonly socialLoginUsecase: SocialLoginUsecase,
     private readonly sendMessageForWithdrawUsecase: SendMessageForWithdrawUsecase,
+    private readonly sendMessageForVerificationUsecase: SendMessageForVerificationUsecase,
     private readonly withdrawUsecase: WithdrawUsecase,
+    private readonly verificationUsecase: VerficationUsecase,
+    private readonly updateUserUsecase: UpdateUserUsecase,
   ) {}
 
   @Public()
@@ -48,12 +56,36 @@ export class UserResolver {
 
   @Public()
   @Mutation(() => SocialLoginOutput, {
-    description: '소셜 로그인 합니다.',
+    description: '소셜 로그인(가입 포함) 합니다.',
   })
   socialLogin(
     @Args('input') input: SocialLoginInput,
   ): Promise<SocialLoginOutput> {
     return this.socialLoginUsecase.execute(input);
+  }
+
+  @Mutation(() => Boolean, {
+    description: '가입 후 본인인증을 위해 인증 코드를 전송합니다.',
+  })
+  sendMessageForVerification(
+    @CurrentUser() userAuth: UserAuth,
+    @Args('phoneNumber') phoneNumber: string,
+  ): Promise<boolean> {
+    return this.sendMessageForVerificationUsecase.execute(
+      userAuth,
+      phoneNumber,
+    );
+  }
+
+  @Mutation(() => User, {
+    description:
+      '가입 후 본인인증을 위해, 휴대폰으로 전송된 인증번호로 본인인증 및 전화번호 등록을 완료합니다.',
+  })
+  verification(
+    @CurrentUser() userAuth: UserAuth,
+    @Args('input') input: VerificationInput,
+  ): Promise<User> {
+    return this.verificationUsecase.execute(input, userAuth);
   }
 
   @Mutation(() => Boolean, {
@@ -68,6 +100,13 @@ export class UserResolver {
   })
   withdraw(@CurrentUser() user: UserAuth, @Args('input') input: WithdrawInput) {
     return this.withdrawUsecase.execute(input, user);
+  }
+
+  @Mutation(() => User, {
+    description: '회원정보를 수정합니다.',
+  })
+  update(@CurrentUser() user: UserAuth, @Args('input') input: UpdateUserInput) {
+    return this.updateUserUsecase.execute(user, input);
   }
 
   @Query(() => [User], {

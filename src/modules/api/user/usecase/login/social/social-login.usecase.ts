@@ -1,23 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
 
-import { IUsecase } from 'src/interface/usecase/usecase.interface';
 import {
   USER_COMMAND_REPOSITORY,
   USER_QUERY_REPOSITORY,
-} from '../../../../../symbols';
-import { UserCommandRepository } from '../../cqrs/command/user.command.repository';
-import { UserQueryRepository } from '../../cqrs/query/user.query.repository';
-import { SocialLoginInput } from '../../dtos/login/input/social-login.input';
-import { SocialLoginOutput } from '../../dtos/login/output/social-login.output';
-import { User } from '../../entities/user.entity';
-import { LoginType } from '../../type/login.type';
-import { SocialProfileProvider } from './social/social-profile.provider';
+} from '../../../../../../symbols';
+import { UserCommandRepository } from '../../../cqrs/command/user.command.repository';
+import { UserQueryRepository } from '../../../cqrs/query/user.query.repository';
+import { SocialLoginInput } from '../../../dtos/login/input/social-login.input';
+import { SocialLoginOutput } from '../../../dtos/login/output/social-login.output';
+import { User } from '../../../entities/user.entity';
+import { LoginType } from '../../../type/login.type';
+import { SocialProfileProvider } from './social-profile.provider';
 
 @Injectable()
-export class SocialLoginUsecase
-  implements IUsecase<SocialLoginInput, SocialLoginOutput>
-{
+export class SocialLoginUsecase {
   constructor(
     @Inject(USER_QUERY_REPOSITORY)
     private readonly userRepository: UserQueryRepository,

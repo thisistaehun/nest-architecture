@@ -1,17 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserRepository } from '../user.repository';
+import { USER_QUERY_REPOSITORY } from '../../../../symbols';
+import { UserQueryRepository } from '../cqrs/query/user.query.repository';
 import { UserService } from '../user.service';
 
 describe('UserService', () => {
   let service: UserService;
-  let repository: UserRepository;
+  let repository: UserQueryRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UserService,
         {
-          provide: UserRepository,
+          provide: USER_QUERY_REPOSITORY,
           useClass: jest.fn(() => ({
             findOne: jest.fn(),
             findAll: jest.fn(),
@@ -21,7 +22,7 @@ describe('UserService', () => {
     }).compile();
 
     service = module.get<UserService>(UserService);
-    repository = module.get<UserRepository>(UserRepository);
+    repository = module.get<UserQueryRepository>(USER_QUERY_REPOSITORY);
   });
 
   it('should be defined', () => {

@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
-import { EmailLoginInput } from '../../dtos/login/input/email-login.input';
-import { LoginOutput } from '../../dtos/login/output/login.output';
-import { UserRepository } from '../../user.repository';
+import { USER_QUERY_REPOSITORY } from '../../../../../../symbols';
+import { UserQueryRepository } from '../../../cqrs/query/user.query.repository';
+import { EmailLoginInput } from '../../../dtos/login/input/email-login.input';
+import { LoginOutput } from '../../../dtos/login/output/login.output';
 
 @Injectable()
 export class EmailLoginUsecase {
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(USER_QUERY_REPOSITORY)
+    private readonly userRepository: UserQueryRepository,
     private readonly jwtAuthService: JwtAuthService,
   ) {}
 
