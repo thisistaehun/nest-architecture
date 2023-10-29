@@ -25,6 +25,5 @@ export class PointTransaction extends CommonEntity {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'point_id' })
-  @Field(() => TotalPoint, { description: '포인트 총계' })
   totalPoint: TotalPoint;
 }
