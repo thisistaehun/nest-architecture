@@ -83,7 +83,12 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
       transactionType: transactionType,
     });
 
-    await this.txEntityManager().save(PointTransaction, pointTransaction);
+    const savedPointTransaction = await this.txEntityManager().save(
+      PointTransaction,
+      pointTransaction,
+    );
+
+    targetUser.point.pointTransactions.push(savedPointTransaction);
 
     switch (input.type) {
       case PointType.FREE:
@@ -104,6 +109,7 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
       TotalPoint,
       targetUser.point,
     );
+    console.log(result);
 
     if (cb) {
       cb(result);

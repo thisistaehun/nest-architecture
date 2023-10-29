@@ -22,6 +22,7 @@ export class PointQueryRepository {
       },
       relations: {
         pointTransactions: true,
+        user: true,
       },
     });
   }
