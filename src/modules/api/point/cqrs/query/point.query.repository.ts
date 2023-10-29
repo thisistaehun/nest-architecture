@@ -12,4 +12,14 @@ export class PointQueryRepository {
     @InjectRepository(TotalPoint)
     private readonly totalPointRepository: Repository<TotalPoint>,
   ) {}
+
+  public async getTotalPoint(userCode: string): Promise<TotalPoint> {
+    return await this.totalPointRepository.findOne({
+      where: {
+        user: {
+          code: userCode,
+        },
+      },
+    });
+  }
 }

@@ -19,3 +19,8 @@ export const USER_QUERY_REPOSITORY = Symbol('USER_QUERY_REPOSITORY');
  */
 export const POINT_COMMAND_REPOSITORY = Symbol('POINT_COMMAND_REPOSITORY');
 export const POINT_QUERY_REPOSITORY = Symbol('POINT_QUERY_REPOSITORY');
+
+/**
+ * @description Point's Helpers
+ */
+export const POINT_OPERATION_HELPER = Symbol('POINT_OPERATION_HELPER');

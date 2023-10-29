@@ -1,10 +1,13 @@
-import { Field } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
 import { PointTransaction } from './point-transaction.entity';
 
 @Entity({ name: 'total_point' })
+@ObjectType({
+  description: '포인트 잔액',
+})
 export class TotalPoint extends CommonEntity {
   @Field(() => Number, { description: '무료 포인트 잔액' })
   @Column({ name: 'free_point', type: 'bigint', default: 0 })

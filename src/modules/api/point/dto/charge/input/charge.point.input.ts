@@ -9,7 +9,7 @@ export class ChargePointInput {
   })
   amount: number;
 
-  @Field(() => Int, {
+  @Field(() => PointType, {
     description: '충전 포인트 타입입니다. 기본값은 무료 포인트입니다.',
     nullable: false,
     defaultValue: PointType.FREE,
