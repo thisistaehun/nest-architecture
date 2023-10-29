@@ -11,6 +11,7 @@ import { PointQueryRepository } from './cqrs/query/point.query.repository';
 import { PointTransaction } from './entities/point-transaction.entity';
 import { TotalPoint } from './entities/total-point.entity';
 import { PointResolver } from './point.resolver';
+import { PointService } from './point.service';
 import { ChargePointUsecase } from './usecase/charge/charge-point.usecase';
 import { UsePointUsecase } from './usecase/use/use-point.usecase';
 
@@ -29,6 +30,7 @@ import { UsePointUsecase } from './usecase/use/use-point.usecase';
       provide: POINT_OPERATION_HELPER,
       useClass: PointOperationHelper,
     },
+    PointService,
     UsePointUsecase,
     ChargePointUsecase,
     PointResolver,

@@ -20,6 +20,25 @@ export class PointQueryRepository {
           code: userCode,
         },
       },
+      relations: {
+        pointTransactions: true,
+      },
+    });
+  }
+
+  public async getPointTransaction(
+    userCode: string,
+    code: number,
+  ): Promise<PointTransaction> {
+    return await this.pointTransactionRepository.findOne({
+      where: {
+        id: code,
+        totalPoint: {
+          user: {
+            code: userCode,
+          },
+        },
+      },
     });
   }
 }
