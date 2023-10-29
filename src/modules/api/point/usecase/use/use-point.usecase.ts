@@ -1,7 +1,8 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { UserAuth } from 'src/modules/api/user/type/user.auth.type';
-import { POINT_COMMAND_REPOSITORY } from 'src/symbols';
+import { POINT_COMMAND_REPOSITORY, POINT_QUERY_REPOSITORY } from 'src/symbols';
 import { PointCommandRepository } from '../../cqrs/command/point.command.repository';
+import { PointQueryRepository } from '../../cqrs/query/point.query.repository';
 import { UsePointInput } from '../../dto/use/input/use.point.input';
 import { TotalPoint } from '../../entities/total-point.entity';
 import { PointType } from '../../type/point.type';
@@ -11,6 +12,8 @@ export class UsePointUsecase {
   constructor(
     @Inject(POINT_COMMAND_REPOSITORY)
     private readonly pointCommandRepository: PointCommandRepository,
+    @Inject(POINT_QUERY_REPOSITORY)
+    private readonly pointQueryRepository: PointQueryRepository,
     private readonly logger: Logger,
   ) {}
 
@@ -18,6 +21,7 @@ export class UsePointUsecase {
     input: UsePointInput,
     userAuth: UserAuth,
   ): Promise<TotalPoint> {
+    await this.remainPointCheck(input, userAuth);
     return this.pointCommandRepository.usePointTransaction(
       userAuth.code,
       input,
@@ -33,5 +37,23 @@ export class UsePointUsecase {
         );
       },
     );
+  }
+
+  private async remainPointCheck(
+    input: UsePointInput,
+    userAuth: UserAuth,
+  ): Promise<void> {
+    const totalPoint = await this.pointQueryRepository.getTotalPoint(
+      userAuth.code,
+    );
+    if (input.type === PointType.FREE) {
+      if (totalPoint.freePoint < input.amount) {
+        throw new Error('포인트가 부족합니다.');
+      }
+    } else {
+      if (totalPoint.paidPoint < input.amount) {
+        throw new Error('포인트가 부족합니다.');
+      }
+    }
   }
 }
