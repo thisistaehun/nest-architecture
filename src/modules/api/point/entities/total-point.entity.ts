@@ -22,11 +22,13 @@ export class TotalPoint extends CommonEntity {
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'user_id' })
+  @Field(() => User, { description: '사용자' })
   user: User;
 
   @OneToMany(
     () => PointTransaction,
     (pointTransaction: PointTransaction) => pointTransaction.totalPoint,
   )
+  @Field(() => [PointTransaction], { description: '포인트 거래 내역' })
   pointTransactions: PointTransaction[];
 }
