@@ -10,16 +10,12 @@ import { UserRole } from '../type/user.role';
 @Entity({ name: 'user' })
 export class User extends CommonEntity {
   @Field(() => String, { nullable: false })
-  @Column({ name: 'name', type: 'varchar', length: 45 })
-  name: string;
-
-  @Field(() => String, { nullable: false })
   @Column({ name: 'email', type: 'varchar', length: 100, unique: true })
   email: string;
 
-  @Field(() => String, { nullable: false })
+  @Field(() => String, { nullable: true, defaultValue: '' })
   @Column({ name: 'nickname', type: 'varchar', length: 100 })
-  nickname: string;
+  nickname?: string;
 
   @Field(() => String, { nullable: true })
   @Column({ name: 'password', type: 'varchar', length: 255, nullable: true })

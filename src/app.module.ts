@@ -7,6 +7,7 @@ import { AwsModule } from './modules/infrastructure/aws/aws.module';
 import { EnvConfigModule } from './modules/infrastructure/config/env-config.module';
 import { DatabaseModule } from './modules/infrastructure/database/database.module';
 import { gqlModuleAsyncOptions } from './modules/infrastructure/graphql/graphql.config';
+import { LoggerModule } from './modules/infrastructure/logger/logger.module';
 import { TransactionMiddleware } from './modules/infrastructure/transaction/transaction.middleware';
 import { TransactionModule } from './modules/infrastructure/transaction/transaction.module';
 
@@ -20,6 +21,7 @@ import { TransactionModule } from './modules/infrastructure/transaction/transact
     AuthModule,
     AwsModule,
     TransactionModule,
+    LoggerModule,
   ],
 })
 export class AppModule implements NestModule {

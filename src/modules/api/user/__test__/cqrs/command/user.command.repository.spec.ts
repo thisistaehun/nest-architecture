@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TRANSACTION_MANAGER } from 'src/modules/infrastructure/transaction/transaction.manager';
 import { USER_COMMAND_REPOSITORY } from 'src/symbols';
-import { UserCommandRepository } from '../../../cqrs/command/user.command.repository';
+import { UserCommandRepository } from '../../../repository/command/user.command.repository';
 
 describe('UserCommandRepository', () => {
   let repository: UserCommandRepository;

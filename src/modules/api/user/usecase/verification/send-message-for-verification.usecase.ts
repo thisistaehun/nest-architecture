@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { UtilService } from 'src/modules/common/util/util.service';
 import { AwsSnsService } from 'src/modules/infrastructure/aws/ses/aws.sns.service';
 import { RedisService } from 'src/modules/infrastructure/redis/redis.service';
 import { USER_QUERY_REPOSITORY } from '../../../../../symbols';
-import { UserQueryRepository } from '../../cqrs/query/user.query.repository';
+import { UserQueryRepository } from '../../repository/query/user.query.repository';
 import { UserAuth } from '../../type/user.auth.type';
 
 @Injectable()
@@ -17,6 +17,7 @@ export class SendMessageForVerificationUsecase {
   ) {}
 
   public async execute(user: UserAuth, phoneNumber: string): Promise<boolean> {
+    await this.checkExistPhoneNumber(phoneNumber);
     const targetUser = await this.userRepository.findOneByCode(user.code);
     const authorizeCode = this.utilService.createRandomSixDigitNumber();
 
@@ -35,5 +36,12 @@ export class SendMessageForVerificationUsecase {
     );
 
     return true;
+  }
+
+  private async checkExistPhoneNumber(phoneNumber: string) {
+    const user = await this.userRepository.findOneByPhoneNumber(phoneNumber);
+    if (user) {
+      throw new ConflictException('이미 가입된 전화번호입니다.');
+    }
   }
 }
