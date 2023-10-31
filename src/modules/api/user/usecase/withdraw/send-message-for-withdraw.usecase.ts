@@ -3,7 +3,7 @@ import { UtilService } from 'src/modules/common/util/util.service';
 import { AwsSnsService } from 'src/modules/infrastructure/aws/ses/aws.sns.service';
 import { RedisService } from 'src/modules/infrastructure/redis/redis.service';
 import { USER_QUERY_REPOSITORY } from '../../../../../symbols';
-import { UserQueryRepository } from '../../cqrs/query/user.query.repository';
+import { UserQueryRepository } from '../../repository/query/user.query.repository';
 import { UserAuth } from '../../type/user.auth.type';
 
 @Injectable()

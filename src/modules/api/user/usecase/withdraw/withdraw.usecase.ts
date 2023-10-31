@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IUsecase } from 'src/interface/usecase/usecase.interface';
+import { UnauthorizedCustomException } from 'src/modules/common/exception/unauthorized-exception';
 import { RedisService } from 'src/modules/infrastructure/redis/redis.service';
 import {
   USER_COMMAND_REPOSITORY,
   USER_QUERY_REPOSITORY,
 } from '../../../../../symbols';
-import { UserCommandRepository } from '../../cqrs/command/user.command.repository';
-import { UserQueryRepository } from '../../cqrs/query/user.query.repository';
-import { WithdrawInput } from '../../dtos/withdraw/input/withdraw.input';
-import { WithdrawOutput } from '../../dtos/withdraw/output/withdraw.output';
+import { WithdrawInput } from '../../dto/withdraw/input/withdraw.input';
+import { WithdrawOutput } from '../../dto/withdraw/output/withdraw.output';
+import { UserCommandRepository } from '../../repository/command/user.command.repository';
+import { UserQueryRepository } from '../../repository/query/user.query.repository';
 import { UserAuth } from '../../type/user.auth.type';
 
 @Injectable()
@@ -35,7 +36,7 @@ export class WithdrawUsecase
     const saved = await this.redisService.get(`withdraw-${code}`);
 
     if (saved !== authorizeCode) {
-      throw new Error('인증 코드가 일치하지 않습니다.');
+      throw new UnauthorizedCustomException('인증 코드가 일치하지 않습니다.');
     }
 
     const success = await this.userCommandRepository.softDelete(code);

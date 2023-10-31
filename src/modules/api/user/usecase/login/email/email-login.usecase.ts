@@ -1,10 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { BadRequestCustomException } from 'src/modules/common/exception/bad-request.exception';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
 import { USER_QUERY_REPOSITORY } from '../../../../../../symbols';
-import { UserQueryRepository } from '../../../cqrs/query/user.query.repository';
-import { EmailLoginInput } from '../../../dtos/login/input/email-login.input';
-import { LoginOutput } from '../../../dtos/login/output/login.output';
+import { EmailLoginInput } from '../../../dto/login/input/email-login.input';
+import { LoginOutput } from '../../../dto/login/output/login.output';
+import { UserQueryRepository } from '../../../repository/query/user.query.repository';
 
 @Injectable()
 export class EmailLoginUsecase {
@@ -21,7 +22,7 @@ export class EmailLoginUsecase {
       savedUser.password,
     );
     if (!passwordConfirmation) {
-      throw new Error('비밀번호가 일치하지 않습니다.');
+      throw new BadRequestCustomException('비밀번호가 일치하지 않습니다.');
     }
 
     const accessToken = this.jwtAuthService.createAccessToken(savedUser);

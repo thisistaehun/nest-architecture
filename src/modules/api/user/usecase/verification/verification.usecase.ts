@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IUsecase } from 'src/interface/usecase/usecase.interface';
+import { UnauthorizedCustomException } from 'src/modules/common/exception/unauthorized-exception';
 import { RedisService } from 'src/modules/infrastructure/redis/redis.service';
 import {
   USER_COMMAND_REPOSITORY,
   USER_QUERY_REPOSITORY,
 } from '../../../../../symbols';
-import { UserCommandRepository } from '../../cqrs/command/user.command.repository';
-import { UserQueryRepository } from '../../cqrs/query/user.query.repository';
-import { VerificationInput } from '../../dtos/verification/verification.input';
+import { VerificationInput } from '../../dto/verification/input/verification.input';
 import { User } from '../../entities/user.entity';
+import { UserCommandRepository } from '../../repository/command/user.command.repository';
+import { UserQueryRepository } from '../../repository/query/user.query.repository';
 import { UserAuth } from '../../type/user.auth.type';
 
 @Injectable()
@@ -31,7 +32,7 @@ export class VerficationUsecase implements IUsecase<VerificationInput, User> {
     );
 
     if (savedAuthorizeCode !== authorizeCode) {
-      throw new Error('인증번호가 일치하지 않습니다.');
+      throw new UnauthorizedCustomException('인증번호가 일치하지 않습니다.');
     }
 
     return await this.userCommandRepository.update(user.code, {

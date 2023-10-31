@@ -1,5 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { UserAuth } from 'src/modules/api/user/type/user.auth.type';
+import { BadRequestCustomException } from 'src/modules/common/exception/bad-request.exception';
 import { POINT_COMMAND_REPOSITORY, POINT_QUERY_REPOSITORY } from 'src/symbols';
 import { PointCommandRepository } from '../../cqrs/command/point.command.repository';
 import { PointQueryRepository } from '../../cqrs/query/point.query.repository';
@@ -48,11 +49,11 @@ export class UsePointUsecase {
     );
     if (input.type === PointType.FREE) {
       if (totalPoint.freePoint < input.amount) {
-        throw new Error('포인트가 부족합니다.');
+        throw new BadRequestCustomException('포인트가 부족합니다.');
       }
     } else {
       if (totalPoint.paidPoint < input.amount) {
-        throw new Error('포인트가 부족합니다.');
+        throw new BadRequestCustomException('포인트가 부족합니다.');
       }
     }
   }

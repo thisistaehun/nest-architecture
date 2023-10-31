@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { BadRequestCustomException } from 'src/modules/common/exception/bad-request.exception';
 import { envVariables } from 'src/modules/infrastructure/config/env-config';
-import { SocialLoginInput } from '../../../dtos/login/input/social-login.input';
+import { SocialLoginInput } from '../../../dto/login/input/social-login.input';
 import { LoginType } from '../../../type/login.type';
 import { SocialProfile } from '../../../type/social-profile.type';
 
@@ -18,7 +19,7 @@ export class SocialProfileProvider {
       case LoginType.GOOGLE:
         return this.getGoogleProfile(token);
       default:
-        throw new Error('Invalid login type');
+        throw new BadRequestCustomException('잘못된 로그인 타입입니다. ');
     }
   }
 

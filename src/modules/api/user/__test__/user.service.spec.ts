@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { USER_QUERY_REPOSITORY } from '../../../../symbols';
-import { UserQueryRepository } from '../cqrs/query/user.query.repository';
-import { UserService } from '../user.service';
+import { UserQueryRepository } from '../repository/query/user.query.repository';
+import { UserService } from '../service/user.service';
 
 describe('UserService', () => {
   let service: UserService;

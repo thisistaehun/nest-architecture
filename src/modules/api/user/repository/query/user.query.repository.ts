@@ -32,6 +32,12 @@ export class UserQueryRepository {
     });
   }
 
+  public findOneByPhoneNumber(phoneNumber: string): Promise<User> {
+    return this.ormUserRepo.findOne({
+      where: { phoneNumber },
+    });
+  }
+
   findOneByNickname(nickname: string): Promise<User> {
     return this.ormUserRepo.findOne({
       where: { nickname },

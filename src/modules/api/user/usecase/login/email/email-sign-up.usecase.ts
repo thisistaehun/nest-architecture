@@ -1,15 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { IUsecase } from 'src/interface/usecase/usecase.interface';
+import { BadRequestCustomException } from 'src/modules/common/exception/bad-request.exception';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
 import {
   USER_COMMAND_REPOSITORY,
   USER_QUERY_REPOSITORY,
 } from '../../../../../../symbols';
-import { UserCommandRepository } from '../../../cqrs/command/user.command.repository';
-import { UserQueryRepository } from '../../../cqrs/query/user.query.repository';
-import { EmailSignUpInput } from '../../../dtos/sign-up/input/email.sign-up.input';
-import { SignUpOutput } from '../../../dtos/sign-up/sign-up.dto';
+import { EmailSignUpInput } from '../../../dto/sign-up/input/email.sign-up.input';
+import { SignUpOutput } from '../../../dto/sign-up/sign-up.dto';
+import { UserCommandRepository } from '../../../repository/command/user.command.repository';
+import { UserQueryRepository } from '../../../repository/query/user.query.repository';
 
 @Injectable()
 export class EmailSignUpUsecase
@@ -40,11 +41,13 @@ export class EmailSignUpUsecase
 
   private passwordValidation(input: EmailSignUpInput) {
     if (input.password !== input.repassword) {
-      throw new Error('비밀번호가 일치하지 않습니다.');
+      throw new BadRequestCustomException('비밀번호가 일치하지 않습니다.');
     }
 
     if (input.password.length < 8) {
-      throw new Error('비밀번호는 8자리 이상이어야 합니다.');
+      throw new BadRequestCustomException(
+        '비밀번호는 8자리 이상이어야 합니다.',
+      );
     }
   }
 }

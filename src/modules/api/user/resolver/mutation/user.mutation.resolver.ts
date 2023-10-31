@@ -1,33 +1,33 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Injectable } from '@nestjs/common';
+import { Args, Mutation } from '@nestjs/graphql';
 import { CurrentUser } from 'src/modules/infrastructure/auth/decorator/current.user.decorator';
 import { Public } from 'src/modules/infrastructure/auth/decorator/public.decorator';
+import { EmailLoginInput } from '../../dto/login/input/email-login.input';
+import { SocialLoginInput } from '../../dto/login/input/social-login.input';
+import { LoginOutput } from '../../dto/login/output/login.output';
+import { SocialLoginOutput } from '../../dto/login/output/social-login.output';
+import { EmailSignUpInput } from '../../dto/sign-up/input/email.sign-up.input';
+import { SignUpOutput } from '../../dto/sign-up/sign-up.dto';
+import { UpdateUserInput } from '../../dto/update/input/update-user.dto';
+import { VerificationInput } from '../../dto/verification/input/verification.input';
+import { CheckDuplicatedNicknameOutput } from '../../dto/verification/output/check.duplicated-nickname.output';
+import { WithdrawInput } from '../../dto/withdraw/input/withdraw.input';
+import { WithdrawOutput } from '../../dto/withdraw/output/withdraw.output';
+import { User } from '../../entities/user.entity';
+import { UserAuth } from '../../type/user.auth.type';
+import { EmailLoginUsecase } from '../../usecase/login/email/email-login.usecase';
+import { EmailSignUpUsecase } from '../../usecase/login/email/email-sign-up.usecase';
+import { SocialLoginUsecase } from '../../usecase/login/social/social-login.usecase';
+import { CheckDuplicatedNicknameUsecase } from '../../usecase/update/check.duplicated-nickname.usecase';
+import { UpdateUserUsecase } from '../../usecase/update/update-user.usecase';
+import { SendMessageForVerificationUsecase } from '../../usecase/verification/send-message-for-verification.usecase';
+import { VerficationUsecase } from '../../usecase/verification/verification.usecase';
+import { SendMessageForWithdrawUsecase } from '../../usecase/withdraw/send-message-for-withdraw.usecase';
+import { WithdrawUsecase } from '../../usecase/withdraw/withdraw.usecase';
 
-import { EmailLoginInput } from './dtos/login/input/email-login.input';
-import { SocialLoginInput } from './dtos/login/input/social-login.input';
-import { LoginOutput } from './dtos/login/output/login.output';
-import { SocialLoginOutput } from './dtos/login/output/social-login.output';
-import { EmailSignUpInput } from './dtos/sign-up/input/email.sign-up.input';
-import { SignUpOutput } from './dtos/sign-up/sign-up.dto';
-import { UpdateUserInput } from './dtos/update/update-user.dto';
-import { VerificationInput } from './dtos/verification/verification.input';
-import { WithdrawInput } from './dtos/withdraw/input/withdraw.input';
-import { WithdrawOutput } from './dtos/withdraw/output/withdraw.output';
-import { User } from './entities/user.entity';
-import { UserAuth } from './type/user.auth.type';
-import { EmailLoginUsecase } from './usecase/login/email/email-login.usecase';
-import { EmailSignUpUsecase } from './usecase/login/email/email-sign-up.usecase';
-import { SocialLoginUsecase } from './usecase/login/social/social-login.usecase';
-import { UpdateUserUsecase } from './usecase/update/update-user.usecase';
-import { SendMessageForVerificationUsecase } from './usecase/verification/send-message-for-verification.usecase';
-import { VerficationUsecase } from './usecase/verification/verification.usecase';
-import { SendMessageForWithdrawUsecase } from './usecase/withdraw/send-message-for-withdraw.usecase';
-import { WithdrawUsecase } from './usecase/withdraw/withdraw.usecase';
-import { UserService } from './user.service';
-
-@Resolver(() => User)
-export class UserResolver {
+@Injectable()
+export class UserMutationResolver {
   constructor(
-    private readonly userService: UserService,
     private readonly singUpUsecase: EmailSignUpUsecase,
     private readonly emailLoginUsecase: EmailLoginUsecase,
     private readonly socialLoginUsecase: SocialLoginUsecase,
@@ -36,6 +36,7 @@ export class UserResolver {
     private readonly withdrawUsecase: WithdrawUsecase,
     private readonly verificationUsecase: VerficationUsecase,
     private readonly updateUserUsecase: UpdateUserUsecase,
+    private readonly checkDuplicatedNicknameUsecase: CheckDuplicatedNicknameUsecase,
   ) {}
 
   @Public()
@@ -109,19 +110,10 @@ export class UserResolver {
     return this.updateUserUsecase.execute(user, input);
   }
 
-  @Query(() => [User], {
-    name: 'users',
-    description: '모든 유저를 가져옵니다.',
+  @Mutation(() => CheckDuplicatedNicknameOutput, {
+    description: '닉네임 중복을 확인합니다.',
   })
-  async findAll() {
-    return this.userService.findAll();
-  }
-
-  @Query(() => User, {
-    name: 'user',
-    description: '유저가 내 정보를 불러옵니다.',
-  })
-  findOne(@CurrentUser() user: User) {
-    return this.userService.findOne(user.id);
+  checkDuplicatedNickname(@Args('nickname') nickname: string) {
+    return this.checkDuplicatedNicknameUsecase.execute(nickname);
   }
 }

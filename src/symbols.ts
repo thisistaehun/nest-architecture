@@ -24,3 +24,8 @@ export const POINT_QUERY_REPOSITORY = Symbol('POINT_QUERY_REPOSITORY');
  * @description Point's Helpers
  */
 export const POINT_OPERATION_HELPER = Symbol('POINT_OPERATION_HELPER');
+
+/**
+ * @description Logger
+ */
+export const DG_LOGGER = Symbol('LOGGER');

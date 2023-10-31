@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ITypeORMCommandRepository } from 'src/interface/cqrs/command.repository.interface';
+import { NotFoundCustomException } from 'src/modules/common/exception/not-found.exception';
 import { Transactional } from 'src/modules/infrastructure/transaction/transaction.decorator';
 import {
   TRANSACTION_MANAGER,
@@ -8,8 +9,8 @@ import {
 import { EntityManager } from 'typeorm';
 import { PointTransaction } from '../../../point/entities/point-transaction.entity';
 import { TotalPoint } from '../../../point/entities/total-point.entity';
-import { SignUpInput } from '../../dtos/sign-up/input/sign-up.input';
-import { UpdateUserInput } from '../../dtos/update/update-user.dto';
+import { SignUpInput } from '../../dto/sign-up/input/sign-up.input';
+import { UpdateUserInput } from '../../dto/update/input/update-user.dto';
 import { User } from '../../entities/user.entity';
 
 @Injectable()
@@ -93,7 +94,7 @@ export class UserCommandRepository implements ITypeORMCommandRepository {
       input,
     );
     if (updateResult.affected === 0) {
-      throw new Error('해당하는 유저가 없습니다.');
+      throw new NotFoundCustomException('해당하는 유저가 없습니다.');
     }
 
     return this.txEntityManager().findOne(User, {
