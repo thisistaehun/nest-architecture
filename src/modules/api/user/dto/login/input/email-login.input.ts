@@ -9,6 +9,7 @@ export class EmailLoginInput {
 
   @Field(() => String, {
     description: '비밀번호',
+    nullable: false,
   })
   password: string;
 }
