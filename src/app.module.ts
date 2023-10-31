@@ -8,6 +8,7 @@ import { EnvConfigModule } from './modules/infrastructure/config/env-config.modu
 import { DatabaseModule } from './modules/infrastructure/database/database.module';
 import { gqlModuleAsyncOptions } from './modules/infrastructure/graphql/graphql.config';
 import { LoggerModule } from './modules/infrastructure/logger/logger.module';
+import { LoggerMiddleware } from './modules/infrastructure/logger/logging.middleware';
 import { TransactionMiddleware } from './modules/infrastructure/transaction/transaction.middleware';
 import { TransactionModule } from './modules/infrastructure/transaction/transaction.module';
 
@@ -27,5 +28,6 @@ import { TransactionModule } from './modules/infrastructure/transaction/transact
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(TransactionMiddleware).forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

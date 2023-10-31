@@ -17,7 +17,6 @@ export class User extends CommonEntity {
   @Column({ name: 'nickname', type: 'varchar', length: 100 })
   nickname?: string;
 
-  @Field(() => String, { nullable: true })
   @Column({ name: 'password', type: 'varchar', length: 255, nullable: true })
   password?: string;
 
