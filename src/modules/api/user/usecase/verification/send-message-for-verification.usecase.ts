@@ -1,4 +1,5 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import { NotFoundCustomException } from 'src/modules/common/exception/not-found.exception';
 import { UtilService } from 'src/modules/common/util/util.service';
 import { AwsSnsService } from 'src/modules/infrastructure/aws/ses/aws.sns.service';
 import { RedisService } from 'src/modules/infrastructure/redis/redis.service';
@@ -19,6 +20,9 @@ export class SendMessageForVerificationUsecase {
   public async execute(user: UserAuth, phoneNumber: string): Promise<boolean> {
     await this.checkExistPhoneNumber(phoneNumber);
     const targetUser = await this.userRepository.findOneByCode(user.code);
+    if (!targetUser) {
+      throw new NotFoundCustomException('존재하지 않는 회원입니다.');
+    }
     const authorizeCode = this.utilService.createRandomSixDigitNumber();
 
     await this.snsService.sendMessage(
