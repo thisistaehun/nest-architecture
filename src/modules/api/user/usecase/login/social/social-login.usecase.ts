@@ -34,25 +34,19 @@ export class SocialLoginUsecase {
     if (savedUser) {
       return this.handleExistingUser(input.type, savedUser);
     } else {
-      return this.createNewUser(
-        input.type,
-        profile.email,
-        profile.name,
-        profile.socialId,
-      );
+      return this.createNewUser(input.type, profile.email, profile.socialId);
     }
   }
 
   private async createNewUser(
     type: LoginType,
     email: string,
-    nickname: string,
+
     socialId: string,
   ) {
     const savedUser = await this.userCommandRepository.signUpTransaction(
       {
         email,
-        nickname,
         socialId,
         loginType: type,
       },
