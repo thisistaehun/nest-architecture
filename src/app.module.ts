@@ -1,5 +1,6 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
+import { AppController } from './app.controller';
 import { PointModule } from './modules/api/point/point.module';
 import { UserModule } from './modules/api/user/user.module';
 import { AuthModule } from './modules/infrastructure/auth/auth.module';
@@ -24,6 +25,7 @@ import { TransactionModule } from './modules/infrastructure/transaction/transact
     TransactionModule,
     LoggerModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
