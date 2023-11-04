@@ -56,6 +56,7 @@ export class UserCommandRepository implements ITypeORMCommandRepository {
         },
       },
     });
+
     const pointTransactions: PointTransaction[] =
       await this.txEntityManager().find(PointTransaction, {
         where: {
@@ -73,9 +74,29 @@ export class UserCommandRepository implements ITypeORMCommandRepository {
     await this.txEntityManager().softDelete(TotalPoint, {
       id: totalPoint.id,
     });
-    await this.txEntityManager().softDelete(User, {
-      code,
+
+    const user = await this.txEntityManager().findOne(User, {
+      where: {
+        code,
+      },
     });
+
+    // 랜덤 숫자 6자리
+    const random = Math.floor(Math.random() * 1000000) + 1;
+
+    await this.txEntityManager().update(
+      User,
+      {
+        code,
+      },
+      {
+        email: user.email + '-' + 'del' + '-' + random.toString(10),
+        phoneNumber: user.phoneNumber + '-' + 'del' + '-' + random.toString(10),
+        nickname: user.nickname + '-' + 'del' + '-' + random.toString(10),
+        password: 'deleted',
+        deletedAt: new Date(),
+      },
+    );
 
     if (cb) {
       await cb(totalPoint.user);
