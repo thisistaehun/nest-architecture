@@ -23,6 +23,7 @@ export class SendMessageForVerificationUsecase {
     if (!targetUser) {
       throw new NotFoundCustomException('존재하지 않는 회원입니다.');
     }
+
     const authorizeCode = this.utilService.createRandomSixDigitNumber();
 
     await this.snsService.sendMessage(

@@ -35,6 +35,18 @@ export class VerficationUsecase implements IUsecase<VerificationInput, User> {
       throw new UnauthorizedCustomException('인증번호가 일치하지 않습니다.');
     }
 
+    const existCheck = await this.userRepository.findOneByPhoneNumber(
+      phoneNumber,
+    );
+
+    if (existCheck) {
+      throw new UnauthorizedCustomException(
+        `이미 가입된 전화번호입니다. 
+        email: ${existCheck.email} 
+        loginType: ${existCheck.loginType}`,
+      );
+    }
+
     return await this.userCommandRepository.update(user.code, {
       phoneNumber,
     });
