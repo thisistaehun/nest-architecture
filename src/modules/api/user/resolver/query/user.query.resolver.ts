@@ -3,6 +3,7 @@ import { CurrentUser } from 'src/modules/infrastructure/auth/decorator/current.u
 
 import { User } from '../../entities/user.entity';
 import { UserService } from '../../service/user.service';
+import { UserAuth } from '../../type/user.auth.type';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -20,7 +21,7 @@ export class UserResolver {
     name: 'user',
     description: '유저가 내 정보를 불러옵니다.',
   })
-  findOne(@CurrentUser() user: User) {
-    return this.userService.findOne(user.id);
+  findOne(@CurrentUser() user: UserAuth) {
+    return this.userService.findOneByEmail(user.email);
   }
 }
