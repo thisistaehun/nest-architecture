@@ -13,6 +13,8 @@ export const gqlModuleAsyncOptions: GqlModuleAsyncOptions = {
     cors: {
       origin: '*',
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+      credenials: true,
+      allowedHeaders: 'Content-Type, Accept',
     },
   }),
 };
