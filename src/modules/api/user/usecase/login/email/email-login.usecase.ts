@@ -19,7 +19,7 @@ export class EmailLoginUsecase {
   async execute(input: EmailLoginInput): Promise<LoginOutput> {
     try {
       const savedUser = await this.userRepository.findOneByEmail(input.email);
-      if (savedUser.loginType !== LoginType.EMAIL) {
+      if (!savedUser || savedUser.loginType !== LoginType.EMAIL) {
         throw new BadRequestCustomException(
           '해당 이메일로 가입한 계정이 없습니다.',
         );
