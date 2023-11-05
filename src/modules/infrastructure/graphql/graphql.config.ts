@@ -10,5 +10,9 @@ export const gqlModuleAsyncOptions: GqlModuleAsyncOptions = {
     driver: ApolloDriver,
     playground: false,
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+    cors: {
+      origin: '*',
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    },
   }),
 };
