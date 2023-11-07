@@ -11,9 +11,19 @@ export const gqlModuleAsyncOptions: GqlModuleAsyncOptions = {
     playground: false,
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
     cors: {
-      origin: '*',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      allowedHeaders: ['Content-Type', 'Authorization'],
+      origin: ['*', "https://dev.youaremarketer.com", "https://d21wwyafz36kc1.amplifyapp.com"],
+      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',      
+      allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'X-Requested-With',
+        'Accept',
+        'Origin',
+        'Access-Control-Allow-Headers',
+        'Access-Control-Allow-Origin',
+        'Access-Control-Allow-Methods',
+        'Access-Control-Allow-Credentials',
+      ],
     },
   }),
 };

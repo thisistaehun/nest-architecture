@@ -10,7 +10,9 @@ async function bootstrap() {
   });
   const logger: Logger = app.get(DG_LOGGER) as Logger;
   app.useLogger(logger);
-  app.enableCors();
+  app.enableCors({
+    origin: ['*', "https://dev.youaremarketer.com"]
+  });
 
   await app.listen(envVariables.SERVER_PORT);
   logger.log(`Server is running on: ${await app.getUrl()}`, 'bootstrap');
