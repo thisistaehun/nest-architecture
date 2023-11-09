@@ -5,8 +5,6 @@ import { TossPaymentsConfirmInput } from './dto/toss.payments.confirm.input';
 
 @Injectable()
 export class TossPaymentsProvider {
-  constructor() {}
-
   async confirmPayments(input: TossPaymentsConfirmInput) {
     const { orderId, paymentKey, amount } = input;
     // 결제 승인 로직
