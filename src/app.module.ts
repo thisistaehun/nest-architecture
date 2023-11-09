@@ -1,7 +1,9 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
+import { PaymentModule } from './modules/api/payment/payment.module';
 import { PointModule } from './modules/api/point/point.module';
+import { ProductModule } from './modules/api/product/product.module';
 import { UserModule } from './modules/api/user/user.module';
 import { AuthModule } from './modules/infrastructure/auth/auth.module';
 import { AwsModule } from './modules/infrastructure/aws/aws.module';
@@ -23,7 +25,9 @@ import { TransactionModule } from './modules/infrastructure/transaction/transact
     AuthModule,
     AwsModule,
     TransactionModule,
+    PaymentModule,
     LoggerModule,
+    ProductModule,
   ],
   controllers: [AppController],
 })

@@ -1,33 +1,32 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ITypeORMCommandRepository } from 'src/interface/cqrs/command.repository.interface';
 import { User } from 'src/modules/api/user/entities/user.entity';
-import { Transactional } from 'src/modules/infrastructure/transaction/transaction.decorator';
 import {
   TRANSACTION_MANAGER,
   TransactionManager,
 } from 'src/modules/infrastructure/transaction/transaction.manager';
-import { POINT_OPERATION_HELPER } from 'src/symbols';
+import { POINT_CALCULATOR } from 'src/symbols';
 import { ChargePointInput } from '../../dto/charge/input/charge.point.input';
 import { UsePointInput } from '../../dto/use/input/use.point.input';
 import { PointTransaction } from '../../entities/point-transaction.entity';
 import { TotalPoint } from '../../entities/total-point.entity';
 import { PointTransactionType } from '../../type/point.transaction.type';
 import { PointType } from '../../type/point.type';
-import { PointOperationHelper } from './point.operation.helper';
+import { PointCalculator } from './point.operation.helper';
 
 @Injectable()
 export class PointCommandRepository implements ITypeORMCommandRepository {
   constructor(
     @Inject(TRANSACTION_MANAGER)
-    private readonly transactionManager: TransactionManager,
-    @Inject(POINT_OPERATION_HELPER)
-    private readonly pointOperationHelper: PointOperationHelper,
+    private readonly txManager: TransactionManager,
+    @Inject(POINT_CALCULATOR)
+    private readonly pointCalculator: PointCalculator,
   ) {}
 
   public txEntityManager() {
-    return this.transactionManager.getEntityManager();
+    return this.txManager.getEntityManager();
   }
-  @Transactional()
+
   public async chargePointTransaction(
     userCode: string,
     input: ChargePointInput,
@@ -37,12 +36,11 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
       userCode,
       input,
       PointTransactionType.CHARGE,
-      this.pointOperationHelper.sumPoint,
+      this.pointCalculator.sumPoint,
       cb,
     );
   }
 
-  @Transactional()
   async usePointTransaction(
     userCode: string,
     input: UsePointInput,
@@ -52,7 +50,7 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
       userCode,
       input,
       PointTransactionType.USE,
-      this.pointOperationHelper.subtractPoint,
+      this.pointCalculator.subtractPoint,
       cb,
     );
   }
@@ -69,7 +67,7 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
         code: userCode,
       },
       relations: {
-        point: {
+        totalPoint: {
           pointTransactions: true,
           user: true,
         },
@@ -79,7 +77,7 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
     const pointTransaction = this.txEntityManager().create(PointTransaction, {
       amount: input.amount,
       type: input.type,
-      totalPoint: targetUser.point,
+      totalPoint: targetUser.totalPoint,
       transactionType: transactionType,
     });
 
@@ -88,18 +86,18 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
       pointTransaction,
     );
 
-    targetUser.point.pointTransactions.push(savedPointTransaction);
+    targetUser.totalPoint.pointTransactions.push(savedPointTransaction);
 
     switch (input.type) {
       case PointType.FREE:
-        targetUser.point.freePoint = operationFunc(
-          targetUser.point.freePoint,
+        targetUser.totalPoint.freePoint = operationFunc(
+          targetUser.totalPoint.freePoint,
           input.amount,
         );
         break;
       case PointType.PAID:
-        targetUser.point.paidPoint = operationFunc(
-          targetUser.point.paidPoint,
+        targetUser.totalPoint.paidPoint = operationFunc(
+          targetUser.totalPoint.paidPoint,
           input.amount,
         );
         break;
@@ -107,9 +105,8 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
 
     const result = await this.txEntityManager().save(
       TotalPoint,
-      targetUser.point,
+      targetUser.totalPoint,
     );
-    console.log(result);
 
     if (cb) {
       cb(result);

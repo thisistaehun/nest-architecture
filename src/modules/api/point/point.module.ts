@@ -1,12 +1,12 @@
 import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
+  POINT_CALCULATOR,
   POINT_COMMAND_REPOSITORY,
-  POINT_OPERATION_HELPER,
   POINT_QUERY_REPOSITORY,
 } from 'src/symbols';
 import { PointCommandRepository } from './cqrs/command/point.command.repository';
-import { PointOperationHelper } from './cqrs/command/point.operation.helper';
+import { PointCalculator } from './cqrs/command/point.operation.helper';
 import { PointQueryRepository } from './cqrs/query/point.query.repository';
 import { PointTransaction } from './entities/point-transaction.entity';
 import { TotalPoint } from './entities/total-point.entity';
@@ -27,8 +27,8 @@ import { UsePointUsecase } from './usecase/use/use-point.usecase';
       useClass: PointCommandRepository,
     },
     {
-      provide: POINT_OPERATION_HELPER,
-      useClass: PointOperationHelper,
+      provide: POINT_CALCULATOR,
+      useClass: PointCalculator,
     },
     PointService,
     UsePointUsecase,
@@ -36,5 +36,7 @@ import { UsePointUsecase } from './usecase/use/use-point.usecase';
     PointResolver,
     Logger,
   ],
+
+  exports: [PointService, POINT_QUERY_REPOSITORY, POINT_COMMAND_REPOSITORY],
 })
 export class PointModule {}

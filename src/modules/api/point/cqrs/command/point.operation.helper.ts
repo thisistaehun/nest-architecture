@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class PointOperationHelper {
+export class PointCalculator {
   public sumPoint(a: number, b: number): number {
     return Number(a) + Number(b);
   }

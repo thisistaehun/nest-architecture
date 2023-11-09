@@ -9,6 +9,7 @@ export class TransactionManager {
     const nameSpace = getNamespace(TRANSACTION_NAMESPACE);
     if (!nameSpace || !nameSpace.active)
       throw new Error('No active namespace found(Transaction Manager)');
+
     return nameSpace.get(TRANSACTION_MANAGER) as EntityManager;
   }
 }
