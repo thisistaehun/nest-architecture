@@ -23,6 +23,7 @@ export class UserQueryRepository {
   public findOneByCode(code: string): Promise<User> {
     return this.ormUserRepo.findOne({
       where: { code },
+      relations: ['totalPoint'],
     });
   }
 

@@ -36,6 +36,10 @@ export const getEnvVariables = (): EnvVariables => {
     AWS_ACCESS_KEY_ID: env.AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: env.AWS_SECRET_ACCESS_KEY,
     AWS_REGION: env.AWS_REGION,
+
+    // TOSS PAYMENTS
+    TOSS_PAYMENTS_SECRET_KEY: env.TOSS_PAYMENTS_SECRET_KEY,
+    TOSS_PAYMENTS_CONFIRM_URL: env.TOSS_PAYMENTS_CONFIRM_URL,
   };
 
   checkUndefinedVars();

@@ -31,4 +31,8 @@ export type EnvVariables = {
   AWS_ACCESS_KEY_ID: string;
   AWS_SECRET_ACCESS_KEY: string;
   AWS_REGION: string;
+
+  // TOSS PAYMENTS
+  TOSS_PAYMENTS_SECRET_KEY: string;
+  TOSS_PAYMENTS_CONFIRM_URL: string;
 };

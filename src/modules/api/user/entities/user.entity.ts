@@ -3,6 +3,7 @@ import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common
 import { Column, Entity, OneToOne } from 'typeorm';
 import { TotalPoint } from '../../point/entities/total-point.entity';
 import { LoginType } from '../type/login.type';
+import { UserRank } from '../type/user.rank.type';
 import { UserRole } from '../type/user.role';
 
 @InputType({ isAbstract: true })
@@ -16,6 +17,15 @@ export class User extends CommonEntity {
   @Field(() => String, { nullable: true, defaultValue: null })
   @Column({ name: 'nickname', type: 'varchar', length: 100, default: null })
   nickname?: string | null;
+
+  @Field(() => UserRank, { nullable: false, defaultValue: UserRank.UNAUTH })
+  @Column({
+    name: 'rank',
+    type: 'enum',
+    enum: UserRank,
+    default: UserRank.UNAUTH,
+  })
+  rank: UserRank;
 
   @Column({ name: 'password', type: 'varchar', length: 255, nullable: true })
   password?: string;
@@ -59,5 +69,5 @@ export class User extends CommonEntity {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  point: TotalPoint;
+  totalPoint: TotalPoint;
 }

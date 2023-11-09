@@ -23,9 +23,17 @@ export const POINT_QUERY_REPOSITORY = Symbol('POINT_QUERY_REPOSITORY');
 /**
  * @description Point's Helpers
  */
-export const POINT_OPERATION_HELPER = Symbol('POINT_OPERATION_HELPER');
+export const POINT_CALCULATOR = Symbol('POINT_CALCULATOR');
 
 /**
  * @description Logger
  */
 export const DG_LOGGER = Symbol('LOGGER');
+
+/**
+ * ----------------------------------------
+ * Payment
+ * ----------------------------------------
+ */
+export const PAYMENT_COMMAND_REPOSITORY = Symbol('PAYMENT_COMMAND_REPOSITORY');
+export const PAYMENT_QUERY_REPOSITORY = Symbol('PAYMENT_QUERY_REPOSITORY');
