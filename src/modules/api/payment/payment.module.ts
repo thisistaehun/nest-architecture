@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { envVariables } from 'src/modules/infrastructure/config/env-config';
 import { RedisModule } from 'src/modules/infrastructure/redis/redis.module';
+import { TossPaymentsModule } from 'src/modules/infrastructure/toss-payments/toss.payments.module';
 import {
   PAYMENT_COMMAND_REPOSITORY,
   PAYMENT_QUERY_REPOSITORY,
@@ -35,6 +36,7 @@ import { EnrollPaymentUsecase } from './usecase/enroll.payment.usecase';
       PointTransaction,
       User,
     ]),
+    TossPaymentsModule,
     RedisModule.register({
       host: envVariables.REDIS_HOST,
       port: envVariables.REDIS_PORT,

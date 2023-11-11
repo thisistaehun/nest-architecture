@@ -3,11 +3,13 @@ import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { IUsecase } from 'src/interface/usecase/usecase.interface';
 import { BadRequestCustomException } from 'src/modules/common/exception/bad-request.exception';
 import { RedisService } from 'src/modules/infrastructure/redis/redis.service';
+import { TossPaymentsProvider } from 'src/modules/infrastructure/toss-payments/toss-payments.provider';
 import {
   DG_LOGGER,
   PAYMENT_COMMAND_REPOSITORY,
   PAYMENT_QUERY_REPOSITORY,
   POINT_COMMAND_REPOSITORY,
+  TOSS_PAYMENTS_PROVIDER,
   USER_QUERY_REPOSITORY,
 } from 'src/symbols';
 import { PointCommandRepository } from '../../point/cqrs/command/point.command.repository';
@@ -37,6 +39,8 @@ export class CompletePaymentUsecase
     private readonly redisService: RedisService,
     @Inject(DG_LOGGER)
     private readonly logger: Logger,
+    @Inject(TOSS_PAYMENTS_PROVIDER)
+    private readonly tossPaymentsProvider: TossPaymentsProvider,
   ) {}
   async execute(
     input: CompletePaymentInput,
@@ -48,7 +52,11 @@ export class CompletePaymentUsecase
       await this.paymentQueryRepository.findOneByCode(input.productCode);
 
     //TODO1: 토스 페이먼츠 결제 승인
-    console.log('결제 승인 완료');
+    const tossPaymentsResult = this.tossPaymentsProvider.approvePayments({
+      orderId: input.orderId,
+      paymentKey: input.paymentKey,
+      amount: targetProduct.price,
+    });
 
     // TODO2: 주문 등록 및 포인트 충전 트랜젝션(결제 완료 시 포인트 적립)
     const { paidPoints, freePoints } = targetProduct;
@@ -63,6 +71,12 @@ export class CompletePaymentUsecase
 
     // 2. 포인트 적립
     try {
+      await this.tossPaymentsProvider.approvePayments({
+        orderId: input.orderId,
+        paymentKey: input.paymentKey,
+        amount: targetProduct.price,
+      });
+
       const paymentOrder =
         await this.paymentCommandRepository.chargePointByPaymentTransaction(
           input,
@@ -78,9 +92,13 @@ export class CompletePaymentUsecase
         paymentOrder,
       };
     } catch (error) {
-      this.logger.error(error);
-      throw new Error('결제 실패');
       // TODO3: 포인트 적립 실패 시 결제 취소
+      const cancelResult = await this.tossPaymentsProvider.cancelPayments({
+        paymentKey: input.paymentKey,
+        cancelReason: '포인트 적립 실패',
+      });
+      this.logger.log(cancelResult);
+      throw new BadRequestCustomException('결제가 취소되었습니다.');
     }
   }
 
