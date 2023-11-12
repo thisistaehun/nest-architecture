@@ -1,7 +1,6 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { IUsecase } from 'src/interface/usecase/usecase.interface';
 import { POINT_COMMAND_REPOSITORY } from 'src/symbols';
-import { UserAuth } from '../../../user/type/user.auth.type';
 import { PointCommandRepository } from '../../cqrs/command/point.command.repository';
 import { ChargePointInput } from '../../dto/charge/input/charge.point.input';
 import { UserWallet } from '../../entities/total-point.entity';
@@ -20,10 +19,10 @@ export class ChargePointUsecase
 
   public async execute(
     input: ChargePointInput,
-    userAuth: UserAuth,
+    userCode: string,
   ): Promise<UserWallet> {
     return await this.pointRepository.chargePointTransaction(
-      userAuth.code,
+      userCode,
       input,
       (totalPoint: UserWallet) => {
         this.logger.verbose(
