@@ -28,7 +28,9 @@ export class ProductRepository {
       where: {
         name: Like(`%${name}%`),
       },
-      relations: ['orders'],
+      relations: {
+        paymentOrders: true,
+      },
     });
   }
 
@@ -37,7 +39,9 @@ export class ProductRepository {
       where: {
         code,
       },
-      relations: ['orders'],
+      relations: {
+        paymentOrders: true,
+      },
     });
   }
 }
