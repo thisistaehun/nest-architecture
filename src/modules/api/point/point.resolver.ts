@@ -21,7 +21,7 @@ export class PointResolver {
   @Mutation(() => UserWallet, {
     description: '포인트 충전',
   })
-  public async chargePoint(
+  public async ADMIN_chargePoint(
     @Args('input') input: ChargePointInput,
     @Args('userCode') userCode: string,
   ): Promise<UserWallet> {
