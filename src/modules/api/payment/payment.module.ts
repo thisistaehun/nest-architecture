@@ -12,7 +12,7 @@ import {
 } from 'src/symbols';
 import { PointCalculator } from '../point/cqrs/command/point.operation.helper';
 import { PointTransaction } from '../point/entities/point-transaction.entity';
-import { TotalPoint } from '../point/entities/total-point.entity';
+import { UserWallet } from '../point/entities/total-point.entity';
 import { PointModule } from '../point/point.module';
 import { Product } from '../product/entity/product.entity';
 import { ProductRepository } from '../product/repository/product.repository';
@@ -32,7 +32,7 @@ import { EnrollPaymentUsecase } from './usecase/enroll.payment.usecase';
     TypeOrmModule.forFeature([
       Product,
       PaymentOrder,
-      TotalPoint,
+      UserWallet,
       PointTransaction,
       User,
     ]),

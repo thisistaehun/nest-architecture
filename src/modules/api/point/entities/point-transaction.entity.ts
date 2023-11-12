@@ -4,7 +4,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { PaymentOrder } from '../../payment/entities/payment.order.entity';
 import { PointTransactionType } from '../type/point.transaction.type';
 import { PointType } from '../type/point.type';
-import { TotalPoint } from './total-point.entity';
+import { UserWallet } from './total-point.entity';
 
 @Entity({ name: 'point_transaction' })
 @ObjectType({ description: 'Point' })
@@ -21,13 +21,13 @@ export class PointTransaction extends CommonEntity {
   @Column({ name: 'transaction_type', type: 'varchar', length: 45 })
   transactionType: PointTransactionType;
 
-  @Field(() => TotalPoint, { description: '총 포인트' })
-  @ManyToOne(() => TotalPoint, (point: TotalPoint) => point.pointTransactions, {
+  @Field(() => UserWallet, { description: '총 포인트' })
+  @ManyToOne(() => UserWallet, (point: UserWallet) => point.pointTransactions, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
   @JoinColumn({ name: 'point_id' })
-  totalPoint: TotalPoint;
+  totalPoint: UserWallet;
 
   @Field(() => PaymentOrder, { description: '결제 주문' })
   @ManyToOne(

@@ -9,7 +9,7 @@ import { POINT_CALCULATOR } from 'src/symbols';
 import { ChargePointInput } from '../../dto/charge/input/charge.point.input';
 import { UsePointInput } from '../../dto/use/input/use.point.input';
 import { PointTransaction } from '../../entities/point-transaction.entity';
-import { TotalPoint } from '../../entities/total-point.entity';
+import { UserWallet } from '../../entities/total-point.entity';
 import { PointTransactionType } from '../../type/point.transaction.type';
 import { PointType } from '../../type/point.type';
 import { PointCalculator } from './point.operation.helper';
@@ -30,8 +30,8 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
   public async chargePointTransaction(
     userCode: string,
     input: ChargePointInput,
-    cb?: (totalPoint: TotalPoint) => void,
-  ): Promise<TotalPoint> {
+    cb?: (totalPoint: UserWallet) => void,
+  ): Promise<UserWallet> {
     return this.processPointTransaction(
       userCode,
       input,
@@ -44,8 +44,8 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
   async usePointTransaction(
     userCode: string,
     input: UsePointInput,
-    cb?: (totalPoint: TotalPoint) => void,
-  ): Promise<TotalPoint> {
+    cb?: (totalPoint: UserWallet) => void,
+  ): Promise<UserWallet> {
     return this.processPointTransaction(
       userCode,
       input,
@@ -60,8 +60,8 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
     input: ChargePointInput | UsePointInput,
     transactionType: PointTransactionType,
     operationFunc: (a: number, b: number) => number,
-    cb?: (totalPoint: TotalPoint) => void,
-  ): Promise<TotalPoint> {
+    cb?: (totalPoint: UserWallet) => void,
+  ): Promise<UserWallet> {
     const targetUser = await this.txEntityManager().findOneOrFail(User, {
       where: {
         code: userCode,
@@ -104,7 +104,7 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
     }
 
     const result = await this.txEntityManager().save(
-      TotalPoint,
+      UserWallet,
       targetUser.totalPoint,
     );
 

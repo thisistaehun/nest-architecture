@@ -9,7 +9,7 @@ import {
   USER_COMMAND_REPOSITORY,
   USER_QUERY_REPOSITORY,
 } from '../../../symbols';
-import { TotalPoint } from '../point/entities/total-point.entity';
+import { UserWallet } from '../point/entities/total-point.entity';
 import { User } from './entities/user.entity';
 import { UserCommandRepository } from './repository/command/user.command.repository';
 import { UserQueryRepository } from './repository/query/user.query.repository';
@@ -30,7 +30,7 @@ import { WithdrawUsecase } from './usecase/withdraw/withdraw.usecase';
 @Module({
   imports: [
     UtilModule,
-    TypeOrmModule.forFeature([User, TotalPoint]),
+    TypeOrmModule.forFeature([User, UserWallet]),
     AuthModule,
     AwsModule,
     RedisModule.register({

@@ -1,7 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity, OneToOne } from 'typeorm';
-import { TotalPoint } from '../../point/entities/total-point.entity';
+import { UserWallet } from '../../point/entities/total-point.entity';
 import { LoginType } from '../type/login.type';
 import { UserRank } from '../type/user.rank.type';
 import { UserRole } from '../type/user.role';
@@ -65,9 +65,9 @@ export class User extends CommonEntity {
   })
   phoneNumber?: string;
 
-  @OneToOne(() => TotalPoint, (point: TotalPoint) => point.user, {
+  @OneToOne(() => UserWallet, (point: UserWallet) => point.user, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  totalPoint: TotalPoint;
+  totalPoint: UserWallet;
 }

@@ -46,21 +46,16 @@ export class CompletePaymentUsecase
     input: CompletePaymentInput,
     userAuth: UserAuth,
   ): Promise<CompletePaymentOutput> {
+    // TODO1: 결제 정보 확인
     await this.checkEnrollment(userAuth, input);
 
+    // TODO2: 상품 정보 확인
     const targetProduct: Product =
       await this.paymentQueryRepository.findOneByCode(input.productCode);
 
-    //TODO1: 토스 페이먼츠 결제 승인
-    const tossPaymentsResult = this.tossPaymentsProvider.approvePayments({
-      orderId: input.orderId,
-      paymentKey: input.paymentKey,
-      amount: targetProduct.price,
-    });
-
-    // TODO2: 주문 등록 및 포인트 충전 트랜젝션(결제 완료 시 포인트 적립)
     const { paidPoints, freePoints } = targetProduct;
-    // 1. 유저 등급 확인
+
+    // TODO3: 유저 정보 확인
     const user: User = await this.userQueryRepository.findOneByCode(
       userAuth.code,
     );
@@ -69,16 +64,18 @@ export class CompletePaymentUsecase
       paidPoints,
     );
 
-    // 2. 포인트 적립
     try {
+      // TODO4: 결제 승인
       await this.tossPaymentsProvider.approvePayments({
         orderId: input.orderId,
         paymentKey: input.paymentKey,
         amount: targetProduct.price,
       });
 
+      // TODO5: 포인트 적립
       const paymentOrder =
         await this.paymentCommandRepository.chargePointByPaymentTransaction(
+          user,
           input,
           user.totalPoint,
           targetProduct,
@@ -114,7 +111,6 @@ export class CompletePaymentUsecase
       throw new NotFoundException('등록된 결제 정보가 없습니다. ');
     }
 
-    // TODO: 결제 정보 확인
     await this.compareData(input, savedData);
   }
 

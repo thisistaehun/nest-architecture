@@ -8,7 +8,7 @@ import {
 } from 'src/modules/infrastructure/transaction/transaction.manager';
 import { EntityManager } from 'typeorm';
 import { PointTransaction } from '../../../point/entities/point-transaction.entity';
-import { TotalPoint } from '../../../point/entities/total-point.entity';
+import { UserWallet } from '../../../point/entities/total-point.entity';
 import { SignUpInput } from '../../dto/sign-up/input/sign-up.input';
 import { UpdateUserInput } from '../../dto/update/input/update-user.dto';
 import { User } from '../../entities/user.entity';
@@ -34,7 +34,7 @@ export class UserCommandRepository implements ITypeORMCommandRepository {
   ): Promise<User> {
     const user = this.txEntityManager().create(User, input);
     await this.txEntityManager().save(User, user);
-    const totalPoint = this.txEntityManager().create(TotalPoint, {
+    const totalPoint = this.txEntityManager().create(UserWallet, {
       user,
     });
     await this.txEntityManager().save(totalPoint);
@@ -49,7 +49,7 @@ export class UserCommandRepository implements ITypeORMCommandRepository {
     code: string,
     cb?: (user: User) => Promise<void>,
   ): Promise<boolean> {
-    const totalPoint = await this.txEntityManager().findOne(TotalPoint, {
+    const totalPoint = await this.txEntityManager().findOne(UserWallet, {
       where: {
         user: {
           code,
@@ -71,7 +71,7 @@ export class UserCommandRepository implements ITypeORMCommandRepository {
         id: pointTransaction.id,
       });
     }
-    await this.txEntityManager().softDelete(TotalPoint, {
+    await this.txEntityManager().softDelete(UserWallet, {
       id: totalPoint.id,
     });
 
