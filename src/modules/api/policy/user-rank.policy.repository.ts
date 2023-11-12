@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserRankPolicy } from './user-rank.policy';
+import { UserRankPolicy } from './user-rank.policy.entity';
 
 @Injectable()
 export class UserRankPolicyRepository {

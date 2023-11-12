@@ -69,5 +69,6 @@ export class User extends CommonEntity {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
-  totalPoint: UserWallet;
+  @Field(() => UserWallet, { nullable: true })
+  userWallet: UserWallet;
 }

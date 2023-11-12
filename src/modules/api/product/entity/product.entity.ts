@@ -39,6 +39,6 @@ export class Product extends CommonEntity {
     description: '결제 상품 구매 내역',
     nullable: true,
   })
-  @OneToMany(() => PaymentOrder, (orders) => orders.product)
-  orders: PaymentOrder[];
+  @OneToMany(() => PaymentOrder, (paymentOrders) => paymentOrders.product)
+  paymentOrders: PaymentOrder[];
 }

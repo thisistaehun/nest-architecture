@@ -67,7 +67,7 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
         code: userCode,
       },
       relations: {
-        totalPoint: {
+        userWallet: {
           pointTransactions: true,
           user: true,
         },
@@ -77,7 +77,7 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
     const pointTransaction = this.txEntityManager().create(PointTransaction, {
       amount: input.amount,
       type: input.type,
-      totalPoint: targetUser.totalPoint,
+      totalPoint: targetUser.userWallet,
       transactionType: transactionType,
     });
 
@@ -86,18 +86,18 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
       pointTransaction,
     );
 
-    targetUser.totalPoint.pointTransactions.push(savedPointTransaction);
+    targetUser.userWallet.pointTransactions.push(savedPointTransaction);
 
     switch (input.type) {
       case PointType.FREE:
-        targetUser.totalPoint.freePoint = operationFunc(
-          targetUser.totalPoint.freePoint,
+        targetUser.userWallet.freePoint = operationFunc(
+          targetUser.userWallet.freePoint,
           input.amount,
         );
         break;
       case PointType.PAID:
-        targetUser.totalPoint.paidPoint = operationFunc(
-          targetUser.totalPoint.paidPoint,
+        targetUser.userWallet.paidPoint = operationFunc(
+          targetUser.userWallet.paidPoint,
           input.amount,
         );
         break;
@@ -105,7 +105,7 @@ export class PointCommandRepository implements ITypeORMCommandRepository {
 
     const result = await this.txEntityManager().save(
       UserWallet,
-      targetUser.totalPoint,
+      targetUser.userWallet,
     );
 
     if (cb) {

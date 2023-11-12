@@ -5,7 +5,7 @@ import { PointTransaction } from 'src/modules/api/point/entities/point-transacti
 import { UserWallet } from 'src/modules/api/point/entities/total-point.entity';
 import { PointTransactionType } from 'src/modules/api/point/type/point.transaction.type';
 import { PointType } from 'src/modules/api/point/type/point.type';
-import { UserRankPolicy } from 'src/modules/api/policy/user-rank.policy';
+import { UserRankPolicy } from 'src/modules/api/policy/user-rank.policy.entity';
 import { Product } from 'src/modules/api/product/entity/product.entity';
 import { User } from 'src/modules/api/user/entities/user.entity';
 import { UserRank } from 'src/modules/api/user/type/user.rank.type';

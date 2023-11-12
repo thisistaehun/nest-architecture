@@ -17,31 +17,65 @@ export class UserQueryRepository {
   public findOneById(id: number): Promise<User> {
     return this.ormUserRepo.findOne({
       where: { id },
+      relations: {
+        userWallet: {
+          pointTransactions: {
+            paymentOrder: true,
+          },
+        },
+      },
     });
   }
 
   public findOneByCode(code: string): Promise<User> {
     return this.ormUserRepo.findOne({
       where: { code },
-      relations: ['totalPoint'],
+      relations: {
+        userWallet: {
+          pointTransactions: {
+            paymentOrder: true,
+          },
+        },
+      },
     });
   }
 
   public findOneByEmail(email: string): Promise<User> {
     return this.ormUserRepo.findOne({
       where: { email },
+      relations: {
+        userWallet: {
+          pointTransactions: {
+            paymentOrder: true,
+          },
+        },
+      },
     });
   }
 
   public findOneByPhoneNumber(phoneNumber: string): Promise<User> {
     return this.ormUserRepo.findOne({
       where: { phoneNumber },
+      relations: {
+        userWallet: {
+          pointTransactions: {
+            paymentOrder: true,
+          },
+        },
+      },
     });
   }
 
   findOneByNickname(nickname: string): Promise<User> {
     return this.ormUserRepo.findOne({
       where: { nickname },
+      relations: {
+        userWallet: {
+          pointTransactions: {
+            paymentOrder: true,
+          },
+        },
+      },
     });
   }
 }

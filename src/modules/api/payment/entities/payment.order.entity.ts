@@ -29,7 +29,7 @@ export class PaymentOrder extends CommonEntity {
   status: PaymentStatus;
 
   @Field(() => Product, { description: '결제 상품' })
-  @ManyToOne(() => Product, (product) => product.orders)
+  @ManyToOne(() => Product, (product) => product.paymentOrders)
   @JoinColumn({ name: 'product_id' })
   product: Product;
 

@@ -77,7 +77,7 @@ export class CompletePaymentUsecase
         await this.paymentCommandRepository.chargePointByPaymentTransaction(
           user,
           input,
-          user.totalPoint,
+          user.userWallet,
           targetProduct,
           freePoints,
           userRankReflectedPaidPoint,

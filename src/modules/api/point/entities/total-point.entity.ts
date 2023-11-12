@@ -21,7 +21,7 @@ export class UserWallet extends CommonEntity {
   @Column({ name: 'cumulative_charged', type: 'bigint', default: 0 })
   cumulativeCharged: number;
 
-  @OneToOne(() => User, (user: User) => user.totalPoint, {
+  @OneToOne(() => User, (user: User) => user.userWallet, {
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',
   })
