@@ -20,7 +20,11 @@ export class ProductRepository {
   }
 
   async findAll(): Promise<Product[]> {
-    return await this.productRepository.find();
+    return await this.productRepository.find({
+      order: {
+        price: 'ASC',
+      },
+    });
   }
 
   async searchByName(name: string): Promise<Product[]> {
@@ -30,6 +34,9 @@ export class ProductRepository {
       },
       relations: {
         paymentOrders: true,
+      },
+      order: {
+        price: 'ASC',
       },
     });
   }

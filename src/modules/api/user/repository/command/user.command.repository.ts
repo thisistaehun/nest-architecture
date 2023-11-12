@@ -12,6 +12,7 @@ import { UserWallet } from '../../../point/entities/total-point.entity';
 import { SignUpInput } from '../../dto/sign-up/input/sign-up.input';
 import { UpdateUserInput } from '../../dto/update/input/update-user.dto';
 import { User } from '../../entities/user.entity';
+import { UserRank } from '../../type/user.rank.type';
 
 @Injectable()
 export class UserCommandRepository implements ITypeORMCommandRepository {
@@ -112,7 +113,10 @@ export class UserCommandRepository implements ITypeORMCommandRepository {
       {
         code,
       },
-      input,
+      {
+        ...input,
+        rank: UserRank.NORMAL,
+      },
     );
     if (updateResult.affected === 0) {
       throw new NotFoundCustomException('해당하는 유저가 없습니다.');
