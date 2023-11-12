@@ -13,7 +13,7 @@ export class PointQueryRepository {
     private readonly totalPointRepository: Repository<UserWallet>,
   ) {}
 
-  public async getTotalPoint(userCode: string): Promise<UserWallet> {
+  public async getUserWallet(userCode: string): Promise<UserWallet> {
     return await this.totalPointRepository.findOne({
       where: {
         user: {

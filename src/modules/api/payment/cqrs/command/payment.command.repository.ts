@@ -1,11 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ITypeORMCommandRepository } from 'src/interface/cqrs/command.repository.interface';
 import { PointCalculator } from 'src/modules/api/point/cqrs/command/point.operation.helper';
 import { PointTransaction } from 'src/modules/api/point/entities/point-transaction.entity';
 import { UserWallet } from 'src/modules/api/point/entities/total-point.entity';
 import { PointTransactionType } from 'src/modules/api/point/type/point.transaction.type';
 import { PointType } from 'src/modules/api/point/type/point.type';
-import { UserRankPolicy } from 'src/modules/api/policy/user-rank.policy.entity';
+import { UserRankPolicy } from 'src/modules/api/policy/entities/user-rank.policy.entity';
 import { Product } from 'src/modules/api/product/entity/product.entity';
 import { User } from 'src/modules/api/user/entities/user.entity';
 import { UserRank } from 'src/modules/api/user/type/user.rank.type';
@@ -14,7 +14,7 @@ import {
   TRANSACTION_MANAGER,
   TransactionManager,
 } from 'src/modules/infrastructure/transaction/transaction.manager';
-import { POINT_CALCULATOR } from 'src/symbols';
+import { DG_LOGGER, POINT_CALCULATOR } from 'src/symbols';
 import { CompletePaymentInput } from '../../dto/input/complete/complete.payment.input';
 import { PaymentOrder } from '../../entities/payment.order.entity';
 import { PaymentStatus } from '../../enum/payment.status';
@@ -26,6 +26,8 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
     private readonly txManager: TransactionManager,
     @Inject(POINT_CALCULATOR)
     private readonly pointCalculator: PointCalculator,
+    @Inject(DG_LOGGER)
+    private readonly logger: Logger,
   ) {}
 
   public txEntityManager() {
@@ -41,12 +43,17 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
     freePoints: number,
     gradeReflectedPaidPoints: number,
   ): Promise<PaymentOrder> {
-    const paymentOrder = await this.createPaymentOrder(orderInput, product);
+    const paymentOrder = await this.createPaymentOrder(
+      orderInput,
+      product,
+      user,
+    );
     await this.createPointTransactions(
       freePoints,
       gradeReflectedPaidPoints,
       totalPoint,
       paymentOrder,
+      user,
     );
 
     const userWallet = await this.updateUserWallet(
@@ -54,15 +61,23 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
       freePoints,
       gradeReflectedPaidPoints,
       product,
+      user,
     );
 
-    await this.txEntityManager().update(PaymentOrder, {
-      id: paymentOrder.id
-    },
+    await this.txEntityManager().update(
+      PaymentOrder,
       {
-        status: PaymentStatus.SUCCESS
-      }
+        id: paymentOrder.id,
+      },
+      {
+        status: PaymentStatus.SUCCESS,
+      },
     );
+    this.logger.log(
+      `사용자(${user.nickname}) 주문 상태 변경 완료: ${paymentOrder.id}`,
+    );
+
+    await this.updateUserRank(userWallet, user);
 
     return this.txEntityManager().findOne(PaymentOrder, {
       where: {
@@ -77,6 +92,25 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
         product: true,
       },
     });
+  }
+
+  private async updateUserRank(userWallet: UserWallet, user: User) {
+    const userRankPolicy = await this.txEntityManager().findOne(
+      UserRankPolicy,
+      {
+        order: {
+          createdAt: 'DESC',
+        },
+      },
+    );
+    this.changeUserRank(userWallet, userRankPolicy, user);
+
+    const updateResult = await this.txEntityManager().update(User, user.id, {
+      rank: user.rank,
+    });
+
+    if (updateResult.affected !== 1) {
+    }
   }
 
   private async changeUserRank(
@@ -104,14 +138,21 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
       user.rank = UserRank.BEGINNER;
     }
 
-    await this.txEntityManager().update(User, user.id, {
+    const updateResult = await this.txEntityManager().update(User, user.id, {
       rank: user.rank,
     });
+
+    if (updateResult.affected !== 1) {
+      this.logger.log(`사용자(${user.nickname}) 등급 변경 없음: ${user.rank}`);
+    } else {
+      this.logger.log(`사용자(${user.nickname}) 등급 변경 완료: ${user.rank}`);
+    }
   }
 
   private async createPaymentOrder(
     orderInput: CompletePaymentInput,
     product: Product,
+    user: User,
   ): Promise<PaymentOrder> {
     const paymentOrder: PaymentOrder = this.txEntityManager().create(
       PaymentOrder,
@@ -124,7 +165,12 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
         product,
       },
     );
-    return this.txEntityManager().save(paymentOrder);
+
+    const savedResult = await this.txEntityManager().save(paymentOrder);
+    this.logger.log(
+      `사용자(${user.nickname}) 결제 주문 생성 완료: ${savedResult.id}`,
+    );
+    return savedResult;
   }
 
   private async createPointTransactions(
@@ -132,6 +178,7 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
     gradeReflectedPaidPoints: number,
     totalPoint: UserWallet,
     paymentOrder: PaymentOrder,
+    user: User,
   ): Promise<void> {
     const freePointTransaction = this.txEntityManager().create(
       PointTransaction,
@@ -159,6 +206,9 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
       this.txEntityManager().save(freePointTransaction),
       this.txEntityManager().save(paidPointTransaction),
     ]);
+    this.logger.log(
+      `사용자(${user.nickname}) 포인트 충전 완료(무료: ${freePoints}, 유료: ${gradeReflectedPaidPoints})`,
+    );
   }
 
   private async updateUserWallet(
@@ -166,6 +216,7 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
     freePoints: number,
     gradeReflectedPaidPoints: number,
     product: Product,
+    user: User,
   ): Promise<UserWallet> {
     const updateResult = await this.txEntityManager().update(
       UserWallet,
@@ -189,6 +240,9 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
     if (updateResult.affected !== 1) {
       throw new Error('포인트 충전에 실패했습니다.');
     }
+    this.logger.log(
+      `사용자(${user.nickname}) 지갑 업데이트 완료(무료: ${freePoints}, 유료: ${gradeReflectedPaidPoints})`,
+    );
 
     return this.txEntityManager().findOne(UserWallet, {
       where: {

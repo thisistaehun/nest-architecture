@@ -9,8 +9,8 @@ export class PointService {
     private readonly pointRepository: PointQueryRepository,
   ) {}
 
-  public async getTotalPoint(code: string) {
-    return await this.pointRepository.getTotalPoint(code);
+  public async getUserWallet(code: string) {
+    return await this.pointRepository.getUserWallet(code);
   }
 
   public async getPointTransaction(code: string, id: number) {

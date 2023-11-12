@@ -44,7 +44,7 @@ export class UsePointUsecase {
     input: UsePointInput,
     userAuth: UserAuth,
   ): Promise<void> {
-    const totalPoint = await this.pointQueryRepository.getTotalPoint(
+    const totalPoint = await this.pointQueryRepository.getUserWallet(
       userAuth.code,
     );
     if (input.type === PointType.FREE) {

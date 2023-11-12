@@ -43,9 +43,9 @@ export class PointResolver {
   @Query(() => UserWallet, {
     description: '총 포인트 조회',
   })
-  public async getTotalPoint(
+  public async userWallet(
     @CurrentUser() userAuth: UserAuth,
   ): Promise<UserWallet> {
-    return await this.pointService.getTotalPoint(userAuth.code);
+    return await this.pointService.getUserWallet(userAuth.code);
   }
 }

@@ -3,6 +3,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppController } from './app.controller';
 import { PaymentModule } from './modules/api/payment/payment.module';
 import { PointModule } from './modules/api/point/point.module';
+import { UserRankPolicyModule } from './modules/api/policy/user-rank.policy.module';
 import { ProductModule } from './modules/api/product/product.module';
 import { UserModule } from './modules/api/user/user.module';
 import { AuthModule } from './modules/infrastructure/auth/auth.module';
@@ -28,6 +29,7 @@ import { TransactionModule } from './modules/infrastructure/transaction/transact
     PaymentModule,
     LoggerModule,
     ProductModule,
+    UserRankPolicyModule,
   ],
   controllers: [AppController],
 })

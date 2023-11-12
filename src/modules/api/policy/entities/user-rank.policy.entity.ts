@@ -1,7 +1,8 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity } from 'typeorm';
 
+@InputType({ isAbstract: true })
 @Entity({ name: 'user_rank_policy' })
 @ObjectType()
 export class UserRankPolicy extends CommonEntity {
@@ -35,6 +36,11 @@ export class UserRankPolicy extends CommonEntity {
   })
   intermediateChargeAmount: number;
 
+  @Column({
+    type: 'int',
+    nullable: false,
+    default: 0,
+  })
   @Field(() => Number, {
     description: '고급자 기준 충전 금액',
   })
