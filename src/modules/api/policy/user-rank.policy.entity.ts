@@ -15,11 +15,21 @@ export class UserRankPolicy extends CommonEntity {
   })
   beginnerChargeAmount: number;
 
+  @Column({
+    type: 'int',
+    nullable: false,
+    default: 0,
+  })
   @Field(() => Number, {
     description: '초심자 기준 충전 금액',
   })
   amateurChargeAmount: number;
 
+  @Column({
+    type: 'int',
+    nullable: false,
+    default: 0,
+  })
   @Field(() => Number, {
     description: '중급자 기준 충전 금액',
   })
@@ -30,6 +40,11 @@ export class UserRankPolicy extends CommonEntity {
   })
   advancedChargeAmount: number;
 
+  @Column({
+    type: 'int',
+    nullable: false,
+    default: 0,
+  })
   @Field(() => Number, {
     description: '전문가 기준 충전 금액',
   })
