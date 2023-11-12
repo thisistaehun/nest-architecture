@@ -21,21 +21,21 @@ export class JwtAuthService {
   }
 
   // TODO : this method should save refresh token at database
-  public createAccessAndRefreshToken(user: Partial<User>) {
+  public createAccessAndRefreshToken(user: User) {
     const accessToken = this.createAccessToken(user);
     const refreshToken = this.createRefreshToken(user.code);
-
     return {
       accessToken,
       refreshToken,
     };
   }
 
-  public createAccessToken(user: Partial<User>) {
+  public createAccessToken(user: User): string {
     const accessTokenPayload: Partial<AccessTokenPayload> = {
       sub: user.code,
       email: user.email,
       nickname: user.nickname,
+      role: user.role,
     };
 
     return this.jwtService.sign(accessTokenPayload, {

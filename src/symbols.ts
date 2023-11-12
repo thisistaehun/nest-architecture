@@ -37,3 +37,10 @@ export const DG_LOGGER = Symbol('LOGGER');
  */
 export const PAYMENT_COMMAND_REPOSITORY = Symbol('PAYMENT_COMMAND_REPOSITORY');
 export const PAYMENT_QUERY_REPOSITORY = Symbol('PAYMENT_QUERY_REPOSITORY');
+
+/**
+ * ----------------------------------------
+ * Toss Payments
+ * ----------------------------------------
+ */
+export const TOSS_PAYMENTS_PROVIDER = Symbol('TOSS_PAYMENTS_PROVIDER');

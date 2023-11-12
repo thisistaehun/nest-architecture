@@ -5,6 +5,7 @@ export enum UserRole {
   MANAGER = 'MANAGER',
   PAID_USER = 'PAID_USER',
   FREE_USER = 'FREE_USER',
+  UNAUTH_USER = 'UNAUTH_USER',
 }
 
 registerEnumType(UserRole, {

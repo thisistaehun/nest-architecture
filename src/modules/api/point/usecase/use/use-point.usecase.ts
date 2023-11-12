@@ -5,7 +5,7 @@ import { POINT_COMMAND_REPOSITORY, POINT_QUERY_REPOSITORY } from 'src/symbols';
 import { PointCommandRepository } from '../../cqrs/command/point.command.repository';
 import { PointQueryRepository } from '../../cqrs/query/point.query.repository';
 import { UsePointInput } from '../../dto/use/input/use.point.input';
-import { TotalPoint } from '../../entities/total-point.entity';
+import { UserWallet } from '../../entities/total-point.entity';
 import { PointType } from '../../type/point.type';
 
 @Injectable()
@@ -21,12 +21,12 @@ export class UsePointUsecase {
   public async execute(
     input: UsePointInput,
     userAuth: UserAuth,
-  ): Promise<TotalPoint> {
+  ): Promise<UserWallet> {
     await this.remainPointCheck(input, userAuth);
     return this.pointCommandRepository.usePointTransaction(
       userAuth.code,
       input,
-      (totalPoint: TotalPoint) => {
+      (totalPoint: UserWallet) => {
         this.logger.verbose(
           `사용 포인트 금액: ${input.amount}, 사용 포인트 타입: ${
             input.type
