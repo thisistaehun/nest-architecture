@@ -22,6 +22,7 @@ import { SocialLoginUsecase } from './usecase/login/social/social-login.usecase'
 import { SocialProfileProvider } from './usecase/login/social/social-profile.provider';
 import { CheckDuplicatedNicknameUsecase } from './usecase/update/check.duplicated-nickname.usecase';
 import { UpdateUserUsecase } from './usecase/update/update-user.usecase';
+import { GetAuthorizedTokenUsecase } from './usecase/verification/get-authorized-token.usecase';
 import { SendMessageForVerificationUsecase } from './usecase/verification/send-message-for-verification.usecase';
 import { VerficationUsecase } from './usecase/verification/verification.usecase';
 import { SendMessageForWithdrawUsecase } from './usecase/withdraw/send-message-for-withdraw.usecase';
@@ -59,6 +60,7 @@ import { WithdrawUsecase } from './usecase/withdraw/withdraw.usecase';
     VerficationUsecase,
     UpdateUserUsecase,
     CheckDuplicatedNicknameUsecase,
+    GetAuthorizedTokenUsecase,
     // Providers
     SocialProfileProvider,
     // Services

@@ -21,6 +21,7 @@ import { EmailSignUpUsecase } from '../../usecase/login/email/email-sign-up.usec
 import { SocialLoginUsecase } from '../../usecase/login/social/social-login.usecase';
 import { CheckDuplicatedNicknameUsecase } from '../../usecase/update/check.duplicated-nickname.usecase';
 import { UpdateUserUsecase } from '../../usecase/update/update-user.usecase';
+import { GetAuthorizedTokenUsecase } from '../../usecase/verification/get-authorized-token.usecase';
 import { SendMessageForVerificationUsecase } from '../../usecase/verification/send-message-for-verification.usecase';
 import { VerficationUsecase } from '../../usecase/verification/verification.usecase';
 import { SendMessageForWithdrawUsecase } from '../../usecase/withdraw/send-message-for-withdraw.usecase';
@@ -38,6 +39,7 @@ export class UserMutationResolver {
     private readonly verificationUsecase: VerficationUsecase,
     private readonly updateUserUsecase: UpdateUserUsecase,
     private readonly checkDuplicatedNicknameUsecase: CheckDuplicatedNicknameUsecase,
+    private readonly getAuthorizedTokenUsecase: GetAuthorizedTokenUsecase,
   ) {}
 
   @Public()
@@ -122,5 +124,13 @@ export class UserMutationResolver {
   })
   checkDuplicatedNickname(@Args('nickname') nickname: string) {
     return this.checkDuplicatedNicknameUsecase.execute(nickname);
+  }
+
+  @Roles(UserRole.UNAUTH_USER)
+  @Mutation(() => String, {
+    description: '인증된 토큰을 발급합니다.',
+  })
+  async getAuthorizedAccessToken(@CurrentUser() user: UserAuth) {
+    return this.getAuthorizedTokenUsecase.execute(user);
   }
 }
