@@ -1,6 +1,7 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { IUsecase } from 'src/interface/usecase/usecase.interface';
-import { POINT_COMMAND_REPOSITORY } from 'src/symbols';
+import { DGLogger } from 'src/modules/infrastructure/logger/logger';
+import { DG_LOGGER, POINT_COMMAND_REPOSITORY } from 'src/symbols';
 import { PointCommandRepository } from '../../cqrs/command/point.command.repository';
 import { ChargePointInput } from '../../dto/charge/input/charge.point.input';
 import { UserWallet } from '../../entities/total-point.entity';
@@ -13,8 +14,8 @@ export class ChargePointUsecase
   constructor(
     @Inject(POINT_COMMAND_REPOSITORY)
     private readonly pointRepository: PointCommandRepository,
-
-    private readonly logger: Logger,
+    @Inject(DG_LOGGER)
+    private readonly logger: DGLogger,
   ) {}
 
   public async execute(

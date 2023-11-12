@@ -4,7 +4,6 @@ import {
   ExceptionFilter,
   Inject,
   Injectable,
-  Logger,
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import { GqlArgumentsHost } from '@nestjs/graphql';
@@ -12,6 +11,7 @@ import { ApolloError } from 'apollo-server-core';
 import { Request } from 'express';
 import { CustomException } from 'src/modules/common/exception/custom.exception';
 import { DG_LOGGER } from 'src/symbols';
+import { DGLogger } from '../logger/logger';
 
 @Catch()
 @Injectable()
@@ -21,7 +21,7 @@ export class GraphQLExceptionFilter
 {
   constructor(
     @Inject(DG_LOGGER)
-    private readonly logger: Logger,
+    private readonly logger: DGLogger,
   ) {
     super();
   }

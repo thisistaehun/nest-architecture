@@ -1,7 +1,12 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UserAuth } from 'src/modules/api/user/type/user.auth.type';
 import { BadRequestCustomException } from 'src/modules/common/exception/bad-request.exception';
-import { POINT_COMMAND_REPOSITORY, POINT_QUERY_REPOSITORY } from 'src/symbols';
+import { DGLogger } from 'src/modules/infrastructure/logger/logger';
+import {
+  DG_LOGGER,
+  POINT_COMMAND_REPOSITORY,
+  POINT_QUERY_REPOSITORY,
+} from 'src/symbols';
 import { PointCommandRepository } from '../../cqrs/command/point.command.repository';
 import { PointQueryRepository } from '../../cqrs/query/point.query.repository';
 import { UsePointInput } from '../../dto/use/input/use.point.input';
@@ -15,7 +20,8 @@ export class UsePointUsecase {
     private readonly pointCommandRepository: PointCommandRepository,
     @Inject(POINT_QUERY_REPOSITORY)
     private readonly pointQueryRepository: PointQueryRepository,
-    private readonly logger: Logger,
+    @Inject(DG_LOGGER)
+    private readonly logger: DGLogger,
   ) {}
 
   public async execute(

@@ -1,16 +1,17 @@
 // core
-import { Inject, Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { Inject, Injectable, NestMiddleware } from '@nestjs/common';
 
 // logger
 import { NextFunction, Request, Response } from 'express';
 import { DG_LOGGER } from 'src/symbols';
 import { LogType } from './log.type';
+import { DGLogger } from './logger';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   constructor(
     @Inject(DG_LOGGER)
-    private readonly logger: Logger,
+    private readonly logger: DGLogger,
   ) {}
 
   use(request: Request, response: Response, next: NextFunction): void {

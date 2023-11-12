@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ITypeORMCommandRepository } from 'src/interface/cqrs/command.repository.interface';
 import { PointCalculator } from 'src/modules/api/point/cqrs/command/point.operation.helper';
 import { PointTransaction } from 'src/modules/api/point/entities/point-transaction.entity';
@@ -9,6 +9,7 @@ import { UserRankPolicy } from 'src/modules/api/policy/entities/user-rank.policy
 import { Product } from 'src/modules/api/product/entity/product.entity';
 import { User } from 'src/modules/api/user/entities/user.entity';
 import { UserRank } from 'src/modules/api/user/type/user.rank.type';
+import { DGLogger } from 'src/modules/infrastructure/logger/logger';
 import { Transactional } from 'src/modules/infrastructure/transaction/transaction.decorator';
 import {
   TRANSACTION_MANAGER,
@@ -27,7 +28,7 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
     @Inject(POINT_CALCULATOR)
     private readonly pointCalculator: PointCalculator,
     @Inject(DG_LOGGER)
-    private readonly logger: Logger,
+    private readonly logger: DGLogger,
   ) {}
 
   public txEntityManager() {

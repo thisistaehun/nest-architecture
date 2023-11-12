@@ -1,7 +1,8 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtAuthService } from 'src/modules/infrastructure/auth/service/jwt.auth.service';
 
 import { BadRequestCustomException } from 'src/modules/common/exception/bad-request.exception';
+import { DGLogger } from 'src/modules/infrastructure/logger/logger';
 import {
   DG_LOGGER,
   USER_COMMAND_REPOSITORY,
@@ -23,7 +24,7 @@ export class SocialLoginUsecase {
     @Inject(USER_COMMAND_REPOSITORY)
     private readonly userCommandRepository: UserCommandRepository,
     @Inject(DG_LOGGER)
-    private readonly logger: Logger,
+    private readonly logger: DGLogger,
     private readonly jwtAuthService: JwtAuthService,
     private readonly socialProfileProvider: SocialProfileProvider,
   ) {}

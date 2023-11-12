@@ -1,7 +1,8 @@
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { IUsecase } from 'src/interface/usecase/usecase.interface';
 import { BadRequestCustomException } from 'src/modules/common/exception/bad-request.exception';
+import { DGLogger } from 'src/modules/infrastructure/logger/logger';
 import { RedisService } from 'src/modules/infrastructure/redis/redis.service';
 import { TossPaymentsProvider } from 'src/modules/infrastructure/toss-payments/toss-payments.provider';
 import {
@@ -38,7 +39,7 @@ export class CompletePaymentUsecase
     private readonly userQueryRepository: UserQueryRepository,
     private readonly redisService: RedisService,
     @Inject(DG_LOGGER)
-    private readonly logger: Logger,
+    private readonly logger: DGLogger,
     @Inject(TOSS_PAYMENTS_PROVIDER)
     private readonly tossPaymentsProvider: TossPaymentsProvider,
   ) {}

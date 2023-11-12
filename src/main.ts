@@ -1,14 +1,14 @@
-import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { envVariables } from './modules/infrastructure/config/env-config';
+import { DGLogger } from './modules/infrastructure/logger/logger';
 import { DG_LOGGER } from './symbols';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
-  const logger: Logger = app.get(DG_LOGGER) as Logger;
+  const logger: DGLogger = app.get(DG_LOGGER);
   app.useLogger(logger);
   app.enableCors({
     origin: true,

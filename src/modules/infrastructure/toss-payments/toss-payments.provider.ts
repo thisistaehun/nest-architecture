@@ -1,7 +1,8 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { DG_LOGGER } from 'src/symbols';
 import { envVariables } from '../config/env-config';
+import { DGLogger } from '../logger/logger';
 import { TossPaymentsCancelInput } from './dto/toss.payments.cancel.input';
 import { TossPaymentsConfirmInput } from './dto/toss.payments.confirm.input';
 
@@ -9,8 +10,8 @@ import { TossPaymentsConfirmInput } from './dto/toss.payments.confirm.input';
 export class TossPaymentsProvider {
   constructor(
     @Inject(DG_LOGGER)
-    private readonly logger: Logger
-  ){}
+    private readonly logger: DGLogger,
+  ) {}
   async approvePayments(input: TossPaymentsConfirmInput) {
     try {
       const { orderId, paymentKey, amount } = input;
@@ -34,7 +35,6 @@ export class TossPaymentsProvider {
       this.logger.log(error);
     }
   }
-  
 
   async cancelPayments(input: TossPaymentsCancelInput) {
     const { paymentKey, cancelReason } = input;
