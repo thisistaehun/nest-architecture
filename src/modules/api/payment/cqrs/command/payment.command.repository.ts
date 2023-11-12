@@ -56,16 +56,13 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
       product,
     );
 
-    const userRankPolicy: UserRankPolicy = await this.txEntityManager().findOne(
-      UserRankPolicy,
+    await this.txEntityManager().update(PaymentOrder, {
+      id: paymentOrder.id
+    },
       {
-        order: {
-          createdAt: 'DESC',
-        },
-      },
+        status: PaymentStatus.SUCCESS
+      }
     );
-
-    await this.changeUserRank(userWallet, userRankPolicy, user);
 
     return this.txEntityManager().findOne(PaymentOrder, {
       where: {
@@ -127,8 +124,7 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
         product,
       },
     );
-    await paymentOrder.save();
-    return paymentOrder;
+    return this.txEntityManager().save(paymentOrder);
   }
 
   private async createPointTransactions(

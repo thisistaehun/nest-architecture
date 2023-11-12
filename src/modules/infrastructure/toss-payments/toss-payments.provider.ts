@@ -1,29 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
+import { DG_LOGGER } from 'src/symbols';
 import { envVariables } from '../config/env-config';
 import { TossPaymentsCancelInput } from './dto/toss.payments.cancel.input';
 import { TossPaymentsConfirmInput } from './dto/toss.payments.confirm.input';
 
 @Injectable()
 export class TossPaymentsProvider {
+  constructor(
+    @Inject(DG_LOGGER)
+    private readonly logger: Logger
+  ){}
   async approvePayments(input: TossPaymentsConfirmInput) {
-    const { orderId, paymentKey, amount } = input;
-    // 결제 승인 로직
-    const result = await axios.post(
-      envVariables.TOSS_PAYMENTS_CONFIRM_URL,
-      {
-        orderId,
-        paymentKey,
-        amount,
-      },
-      {
-        headers: {
-          Authorization: 'Basic ' + envVariables.TOSS_PAYMENTS_SECRET_KEY,
+    try {
+      const { orderId, paymentKey, amount } = input;
+      // 결제 승인 로직
+      const result = await axios.post(
+        envVariables.TOSS_PAYMENTS_CONFIRM_URL,
+        {
+          orderId,
+          paymentKey,
+          amount,
         },
-      },
-    );
-    return result.data;
+        {
+          headers: {
+            Authorization: 'Basic ' + envVariables.TOSS_PAYMENTS_SECRET_KEY,
+          },
+        },
+      );
+      this.logger.log(result);
+      return result.data;
+    } catch (error) {
+      this.logger.log(error);
+    }
   }
+  
 
   async cancelPayments(input: TossPaymentsCancelInput) {
     const { paymentKey, cancelReason } = input;
