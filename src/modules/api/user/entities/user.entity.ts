@@ -48,7 +48,7 @@ export class User extends CommonEntity {
     name: 'role',
     type: 'enum',
     enum: UserRole,
-    default: UserRole.FREE_USER,
+    default: UserRole.UNAUTH_USER,
   })
   role: UserRole;
 

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { Args, Mutation } from '@nestjs/graphql';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/modules/infrastructure/auth/decorator/current.user.decorator';
 import { Public } from 'src/modules/infrastructure/auth/decorator/public.decorator';
+import { Roles } from 'src/modules/infrastructure/auth/decorator/roles.decorator';
 import { EmailLoginInput } from '../../dto/login/input/email-login.input';
 import { SocialLoginInput } from '../../dto/login/input/social-login.input';
 import { LoginOutput } from '../../dto/login/output/login.output';
@@ -15,6 +15,7 @@ import { WithdrawInput } from '../../dto/withdraw/input/withdraw.input';
 import { WithdrawOutput } from '../../dto/withdraw/output/withdraw.output';
 import { User } from '../../entities/user.entity';
 import { UserAuth } from '../../type/user.auth.type';
+import { UserRole } from '../../type/user.role';
 import { EmailLoginUsecase } from '../../usecase/login/email/email-login.usecase';
 import { EmailSignUpUsecase } from '../../usecase/login/email/email-sign-up.usecase';
 import { SocialLoginUsecase } from '../../usecase/login/social/social-login.usecase';
@@ -25,7 +26,7 @@ import { VerficationUsecase } from '../../usecase/verification/verification.usec
 import { SendMessageForWithdrawUsecase } from '../../usecase/withdraw/send-message-for-withdraw.usecase';
 import { WithdrawUsecase } from '../../usecase/withdraw/withdraw.usecase';
 
-@Injectable()
+@Resolver()
 export class UserMutationResolver {
   constructor(
     private readonly singUpUsecase: EmailSignUpUsecase,
@@ -65,6 +66,7 @@ export class UserMutationResolver {
     return this.socialLoginUsecase.execute(input);
   }
 
+  @Roles(UserRole.UNAUTH_USER)
   @Mutation(() => Boolean, {
     description: '가입 후 본인인증을 위해 인증 코드를 전송합니다.',
   })
@@ -78,6 +80,7 @@ export class UserMutationResolver {
     );
   }
 
+  @Roles(UserRole.UNAUTH_USER)
   @Mutation(() => User, {
     description:
       '가입 후 본인인증을 위해, 휴대폰으로 전송된 인증번호로 본인인증 및 전화번호 등록을 완료합니다.',
@@ -89,6 +92,7 @@ export class UserMutationResolver {
     return this.verificationUsecase.execute(input, userAuth);
   }
 
+  @Roles(UserRole.FREE_USER)
   @Mutation(() => Boolean, {
     description: '회원탈퇴를 위해 인증 코드를 저장합니다.',
   })
@@ -96,6 +100,7 @@ export class UserMutationResolver {
     return this.sendMessageForWithdrawUsecase.execute(user);
   }
 
+  @Roles(UserRole.FREE_USER)
   @Mutation(() => WithdrawOutput, {
     description: '인증코드를 확인하여 회원탈퇴를 합니다.',
   })
@@ -103,6 +108,7 @@ export class UserMutationResolver {
     return this.withdrawUsecase.execute(input, user);
   }
 
+  @Roles(UserRole.UNAUTH_USER)
   @Mutation(() => User, {
     description: '회원정보를 수정합니다.',
   })
@@ -110,6 +116,7 @@ export class UserMutationResolver {
     return this.updateUserUsecase.execute(user, input);
   }
 
+  @Roles(UserRole.UNAUTH_USER)
   @Mutation(() => CheckDuplicatedNicknameOutput, {
     description: '닉네임 중복을 확인합니다.',
   })

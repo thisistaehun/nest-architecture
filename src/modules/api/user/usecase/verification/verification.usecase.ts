@@ -11,6 +11,7 @@ import { User } from '../../entities/user.entity';
 import { UserCommandRepository } from '../../repository/command/user.command.repository';
 import { UserQueryRepository } from '../../repository/query/user.query.repository';
 import { UserAuth } from '../../type/user.auth.type';
+import { UserRole } from '../../type/user.role';
 
 @Injectable()
 export class VerficationUsecase implements IUsecase<VerificationInput, User> {
@@ -49,6 +50,7 @@ export class VerficationUsecase implements IUsecase<VerificationInput, User> {
 
     return await this.userCommandRepository.update(user.code, {
       phoneNumber,
+      role: UserRole.FREE_USER,
     });
   }
 }
