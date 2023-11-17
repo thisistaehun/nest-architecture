@@ -96,6 +96,7 @@ export class CompletePaymentUsecase
         cancelReason: '포인트 적립 실패',
       });
       this.logger.log(cancelResult);
+      this.logger.error(error);
       throw new BadRequestCustomException('결제가 취소되었습니다.');
     }
   }

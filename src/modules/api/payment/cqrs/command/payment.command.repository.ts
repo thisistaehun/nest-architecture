@@ -96,22 +96,15 @@ export class PaymentCommandRepository implements ITypeORMCommandRepository {
   }
 
   private async updateUserRank(userWallet: UserWallet, user: User) {
-    const userRankPolicy = await this.txEntityManager().findOne(
-      UserRankPolicy,
-      {
+    const userRankPolicy: UserRankPolicy = (
+      await this.txEntityManager().find(UserRankPolicy, {
         order: {
           createdAt: 'DESC',
         },
-      },
-    );
-    this.changeUserRank(userWallet, userRankPolicy, user);
-
-    const updateResult = await this.txEntityManager().update(User, user.id, {
-      rank: user.rank,
-    });
-
-    if (updateResult.affected !== 1) {
-    }
+      })
+    )[0];
+    this.logger.log(userRankPolicy);
+    await this.changeUserRank(userWallet, userRankPolicy, user);
   }
 
   private async changeUserRank(

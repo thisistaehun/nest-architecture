@@ -35,4 +35,7 @@ export type EnvVariables = {
   // TOSS PAYMENTS
   TOSS_PAYMENTS_SECRET_KEY: string;
   TOSS_PAYMENTS_CONFIRM_URL: string;
+
+  // DATA_LAB
+  API_DATA_LAB_TOKEN: string;
 };

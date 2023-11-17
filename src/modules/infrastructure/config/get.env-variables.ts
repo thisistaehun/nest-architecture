@@ -40,6 +40,9 @@ export const getEnvVariables = (): EnvVariables => {
     // TOSS PAYMENTS
     TOSS_PAYMENTS_SECRET_KEY: env.TOSS_PAYMENTS_SECRET_KEY,
     TOSS_PAYMENTS_CONFIRM_URL: env.TOSS_PAYMENTS_CONFIRM_URL,
+
+    // DATA_LAB
+    API_DATA_LAB_TOKEN: env.API_DATA_LAB_TOKEN,
   };
 
   checkUndefinedVars();
