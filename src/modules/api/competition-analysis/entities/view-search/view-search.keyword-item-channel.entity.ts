@@ -12,7 +12,7 @@ export class ViewSearchKeywordItemChannel extends CommonBulkEntity {
   highlight: string;
 
   @Field(() => String, { nullable: true })
-  @Column({ name: 'url', type: 'text', nullable: true })
+  @Column({ name: 'url', type: 'varchar', length: 1000, nullable: true })
   url: string;
 
   @Field(() => String, { nullable: true })
@@ -27,7 +27,19 @@ export class ViewSearchKeywordItemChannel extends CommonBulkEntity {
   @Column({ name: 'service_id', type: 'text', nullable: true })
   serviceId: string;
 
-  @ManyToOne(() => ViewSearchKeywordItem, (keywordItem) => keywordItem.channel)
+  @ManyToOne(
+    () => ViewSearchKeywordItem,
+    (keywordItem) => keywordItem.channel,
+    {
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
+  )
   @JoinColumn({ name: 'keyword_item_id' })
   keywordItem: ViewSearchKeywordItem;
+
+  constructor(partial: Partial<ViewSearchKeywordItemChannel>) {
+    super();
+    Object.assign(this, partial);
+  }
 }

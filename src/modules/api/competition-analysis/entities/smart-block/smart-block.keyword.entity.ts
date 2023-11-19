@@ -22,4 +22,9 @@ export class SmartBlockKeyword extends CommonBulkEntity {
   @ManyToOne(() => SearchKeyword, (keyword) => keyword.smartBlockKeywords)
   @JoinColumn({ name: 'keyword_id' })
   keyword: SearchKeyword;
+
+  constructor(partial: Partial<SmartBlockKeyword>) {
+    super();
+    Object.assign(this, partial);
+  }
 }

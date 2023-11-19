@@ -46,7 +46,7 @@ export class ViewSearchKeywordItemContent extends CommonBulkEntity {
   crScoreD: number;
 
   @Field(() => String, { nullable: true })
-  @Column({ name: 'url', type: 'varchar', length: 255, nullable: true })
+  @Column({ name: 'url', type: 'varchar', length: 1000, nullable: true })
   url: string;
 
   @Field(() => String, { nullable: true })
@@ -65,23 +65,31 @@ export class ViewSearchKeywordItemContent extends CommonBulkEntity {
   @Column({ name: 'media_url', type: 'varchar', length: 255, nullable: true })
   createdAt: string;
 
-  @Field(() => [ViewSearchKeywordItemContentTag])
+  @Field(() => [ViewSearchKeywordItemContentTag], { nullable: true })
   @OneToMany(
     () => ViewSearchKeywordItemContentTag,
     (tags) => tags.keywordItemContent,
   )
   tags: ViewSearchKeywordItemContentTag[];
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   serviceType: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   serviceId: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   contentId: string;
 
-  @OneToOne(() => ViewSearchKeywordItem, (keywordItem) => keywordItem.content)
+  @OneToOne(() => ViewSearchKeywordItem, (keywordItem) => keywordItem.content, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'keyword_item_id' })
   keywordItem: ViewSearchKeywordItem;
+
+  constructor(partial: Partial<ViewSearchKeywordItemContent>) {
+    super();
+    Object.assign(this, partial);
+  }
 }

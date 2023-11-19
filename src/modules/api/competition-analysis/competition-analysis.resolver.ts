@@ -1,7 +1,11 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CurrentUser } from 'src/modules/infrastructure/auth/decorator/current.user.decorator';
+import { UserAuth } from '../user/type/user.auth.type';
+import { CompetitionAnalysisService } from './competition-analysis.service';
 import { CrawlSearchTypeOutput } from './dto/crawl.search-type/crawl.search-type.output';
 import { ViewItemSearchInput } from './dto/item-search/view.item-search.input';
 import { SmartBlockKeywordSearchInput } from './dto/smart-block/smart-block.keyword.search.input';
+import { SearchKeyword } from './entities/keyword/keyword.entity';
 import { SmartBlockKeyword } from './entities/smart-block/smart-block.keyword.entity';
 import { ViewSearchKeywordItem } from './entities/view-search/view-search.keyword-item.entity';
 import { ViewSearchKeywordDetail } from './entities/view-search/view-search.keyword.detail.entity';
@@ -21,10 +25,14 @@ export class CompetitionAnalysisResolver {
     private readonly getCategoryUsecase: GetCategoryUsecase,
     private readonly crawlSearchTypeUsecase: CrawlSearchTypeUsecase,
     private readonly crawlKeywordItemDetailUsecase: CrawlKeywordItemDetailUsecase,
+    private readonly competitionAnalysisService: CompetitionAnalysisService,
   ) {}
   @Mutation(() => [ViewSearchKeywordItem])
-  async viewItemSearch(@Args('input') input: ViewItemSearchInput) {
-    return this.searchKeywordUsecase.execute(input);
+  async viewItemSearch(
+    @Args('input') input: ViewItemSearchInput,
+    @CurrentUser('user') user: UserAuth,
+  ) {
+    return this.searchKeywordUsecase.execute(input, user.code);
   }
 
   @Mutation(() => [SmartBlockKeyword])
@@ -52,5 +60,10 @@ export class CompetitionAnalysisResolver {
   @Mutation(() => [ViewSearchKeywordDetail])
   async viewItemSearchDetail(@Args('keyword') keyword: string) {
     return this.crawlKeywordItemDetailUsecase.execute(keyword);
+  }
+
+  @Query(() => [SearchKeyword], { nullable: true })
+  async searchKeywords(@CurrentUser('user') user: UserAuth) {
+    return this.competitionAnalysisService.findSearchKeywords(user.code);
   }
 }

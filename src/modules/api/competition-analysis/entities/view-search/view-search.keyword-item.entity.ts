@@ -10,26 +10,37 @@ import { ViewSearchKeywordDetail } from './view-search.keyword.detail.entity';
 @ObjectType()
 @Entity({ name: 'keyword_item' })
 export class ViewSearchKeywordItem extends CommonBulkEntity {
-  @Field(() => ViewSearchKeywordItemChannel)
+  @Field(() => ViewSearchKeywordItemChannel, {
+    description: '검색 키워드 아이템 채널',
+  })
   @OneToOne(
     () => ViewSearchKeywordItemChannel,
     (keywordItemChannel) => keywordItemChannel.keywordItem,
   )
   channel: ViewSearchKeywordItemChannel;
 
-  @Field(() => ViewSearchKeywordItemContent)
+  @Field(() => ViewSearchKeywordItemContent, {
+    description: '검색 키워드 아이템 컨텐츠',
+  })
   @OneToOne(
     () => ViewSearchKeywordItemContent,
     (keywordItemContent) => keywordItemContent.keywordItem,
   )
   content: ViewSearchKeywordItemContent;
 
-  @ManyToOne(() => SearchKeyword, (keyword) => keyword.items)
+  @ManyToOne(() => SearchKeyword, (keyword) => keyword.items, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'search_keyword_id' })
   keyword: SearchKeyword;
 
   @Field(() => ViewSearchKeywordDetail)
   @OneToOne(() => ViewSearchKeywordDetail, (detail) => detail.keywordItem)
-  @JoinColumn({ name: 'keyword_item_id' })
   detail: ViewSearchKeywordDetail;
+
+  constructor(partial: Partial<ViewSearchKeywordItem>) {
+    super();
+    Object.assign(this, partial);
+  }
 }

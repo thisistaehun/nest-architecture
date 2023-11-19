@@ -31,6 +31,7 @@
     "@bull-board/nestjs": "^5.9.1",
     "@nestjs/apollo": "^12.0.9",
     "@nestjs/bull": "^10.0.1",
+    "@nestjs/cache-manager": "^2.1.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^9.0.0",

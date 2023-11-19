@@ -5,9 +5,20 @@ import { SearchKeyword } from './keyword.entity';
 
 @Entity()
 export class KeywordToUser extends CommonBulkEntity {
-  @ManyToOne(() => SearchKeyword, (keyword) => keyword.keywordToUsers)
+  @ManyToOne(() => SearchKeyword, (keyword) => keyword.keywordToUsers, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   keyword: SearchKeyword;
 
-  @ManyToOne(() => User, (user) => user.keywordToUsers)
+  @ManyToOne(() => User, (user) => user.keywordToUsers, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   user: User;
+
+  constructor(partial: Partial<KeywordToUser>) {
+    super();
+    Object.assign(this, partial);
+  }
 }
