@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AuthModule } from './auth/auth.module';
 import { AwsModule } from './aws/aws.module';
+import { BullManagerModule } from './bull-queue/bull-queue.module';
 import { EnvConfigModule } from './config/env-config.module';
 import { DatabaseModule } from './database/database.module';
 import { ExceptionModule } from './exception/exception.module';
@@ -19,6 +20,7 @@ import { TransactionModule } from './transaction/transaction.module';
     TransactionModule,
     LoggerModule,
     ExceptionModule,
+    BullManagerModule,
   ],
 })
 export class InfrastructureModule {}

@@ -1,43 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
 import { InjectBrowser } from 'nest-puppeteer';
 import { Browser } from 'puppeteer';
-import { envVariables } from 'src/modules/infrastructure/config/env-config';
-import { ViewItemSearchInput } from '../dto/item-search/view.item-search.input';
-import { ViewSearchKeywordItem } from '../entities/view-search/view-search.keyword-item.entity';
 
 @Injectable()
-export class ViewItemSearchUsecase {
+export class CrawlKeywordItemDetailUsecase {
   constructor(
     @InjectBrowser('BrowserInstanceName') private readonly browser: Browser,
   ) {}
-  async execute(input: ViewItemSearchInput): Promise<ViewSearchKeywordItem[]> {
-    const { keyword, page, withDetail } = input;
-    const viewGeneral = await axios.post(
-      'https://api.datalab.tools/api/sdk/fetch/search/view/normal',
-      {
-        args: [keyword, { start: page }],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${envVariables.API_DATA_LAB_TOKEN}`,
-        },
-      },
-    );
 
-    const items = viewGeneral.data.items as ViewSearchKeywordItem[];
-    if (!withDetail) {
-      return items;
-    }
-
-    await Promise.all(
-      items.map(async (item) => {
-        const detail = await this.crawlDetailPage(item.content.url);
-        item.detail = detail;
-      }),
-    );
-
-    return items;
+  public async execute(url: string): Promise<any> {
+    return this.crawlDetailPage(url);
   }
 
   private async crawlDetailPage(url: string): Promise<any> {

@@ -38,4 +38,8 @@ export type EnvVariables = {
 
   // DATA_LAB
   API_DATA_LAB_TOKEN: string;
+
+  // BULL QUEUE
+  BULL_QUEUE_BACKOFF_DELAY_TIME: number;
+  BULL_QUEUE_FAILURE_RETRY_ATTEMPTS: number;
 };

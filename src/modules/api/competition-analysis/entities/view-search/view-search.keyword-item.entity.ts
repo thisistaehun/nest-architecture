@@ -4,6 +4,7 @@ import { Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { SearchKeyword } from '../keyword/keyword.entity';
 import { ViewSearchKeywordItemChannel } from './view-search.keyword-item-channel.entity';
 import { ViewSearchKeywordItemContent } from './view-search.keyword-item-content.entity';
+import { ViewSearchKeywordDetail } from './view-search.keyword.detail.entity';
 
 @InputType({ isAbstract: true })
 @ObjectType()
@@ -26,4 +27,9 @@ export class ViewSearchKeywordItem extends CommonBulkEntity {
   @ManyToOne(() => SearchKeyword, (keyword) => keyword.items)
   @JoinColumn({ name: 'search_keyword_id' })
   keyword: SearchKeyword;
+
+  @Field(() => ViewSearchKeywordDetail)
+  @OneToOne(() => ViewSearchKeywordDetail, (detail) => detail.keywordItem)
+  @JoinColumn({ name: 'keyword_item_id' })
+  detail: ViewSearchKeywordDetail;
 }

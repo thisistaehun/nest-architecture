@@ -43,6 +43,12 @@ export const getEnvVariables = (): EnvVariables => {
 
     // DATA_LAB
     API_DATA_LAB_TOKEN: env.API_DATA_LAB_TOKEN,
+
+    // BULL QUEUE
+    BULL_QUEUE_BACKOFF_DELAY_TIME: Number(env.BULL_QUEUE_BACKOFF_DELAY_TIME),
+    BULL_QUEUE_FAILURE_RETRY_ATTEMPTS: Number(
+      env.BULL_QUEUE_FAILURE_RETRY_ATTEMPTS,
+    ),
   };
 
   checkUndefinedVars();

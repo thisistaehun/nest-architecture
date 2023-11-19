@@ -1,6 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
+import { KeywordToUser } from '../../competition-analysis/entities/keyword/keyword-to-user.entity';
 import { UserWallet } from '../../point/entities/total-point.entity';
 import { LoginType } from '../type/login.type';
 import { UserRank } from '../type/user.rank.type';
@@ -71,4 +72,7 @@ export class User extends CommonEntity {
   })
   @Field(() => UserWallet, { nullable: true })
   userWallet: UserWallet;
+
+  @OneToMany(() => KeywordToUser, (keywordToUser) => keywordToUser.user)
+  keywordToUsers: KeywordToUser[];
 }
