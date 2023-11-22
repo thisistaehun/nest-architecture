@@ -58,8 +58,8 @@ export class CompetitionAnalysisResolver {
   }
 
   @Mutation(() => [ViewSearchKeywordDetail])
-  async viewItemSearchDetail(@Args('keyword') keyword: string) {
-    return this.crawlKeywordItemDetailUsecase.execute(keyword);
+  async viewItemSearchDetail(@Args('url') url: string) {
+    return this.crawlKeywordItemDetailUsecase.execute(url);
   }
 
   @Query(() => [SearchKeyword], { nullable: true })

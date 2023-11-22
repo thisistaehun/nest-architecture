@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectBrowser } from 'nest-puppeteer';
 import { Browser } from 'puppeteer';
+import { ViewSearchKeywordDetail } from '../entities/view-search/view-search.keyword.detail.entity';
 
 @Injectable()
 export class CrawlKeywordItemDetailUsecase {
@@ -8,16 +9,15 @@ export class CrawlKeywordItemDetailUsecase {
     @InjectBrowser('BrowserInstanceName') private readonly browser: Browser,
   ) {}
 
-  public async execute(url: string): Promise<any> {
+  public async execute(url: string): Promise<ViewSearchKeywordDetail> {
     return this.crawlDetailPage(url);
   }
 
-  private async crawlDetailPage(url: string): Promise<any> {
+  private async crawlDetailPage(url: string): Promise<ViewSearchKeywordDetail> {
     const page = await this.browser.newPage();
-    // 페이지 이동
     await page.goto(url);
 
-    // 병렬 처리를 위해 Promise.all을 사용합니다.
+    // 인용문, 장소 맵, 내용, 좋아요, 태그, 댓글 크롤링
     const [quotations, placesMap, contents, likes, tags, replies] =
       await Promise.all([
         // 인용문 크롤링
@@ -41,14 +41,10 @@ export class CrawlKeywordItemDetailUsecase {
           );
           return elements.map((element) => element.textContent.trim()).join('');
         }),
-
         // 좋아요 크롤링
-        page.evaluate(() => {
-          const element = document.querySelector(
-            '.u_likeit_list_btn .u_cnt ._count',
-          );
-          return element ? element.textContent.trim() : '10';
-        }),
+        page.$$eval('div.btn_like', (divs) =>
+          divs.map((div) => div.textContent),
+        ),
         // 태그 크롤링
         page.evaluate(() => {
           const elements = Array.from(document.querySelectorAll('.post_tag'));
@@ -66,16 +62,19 @@ export class CrawlKeywordItemDetailUsecase {
       ]);
 
     await page.close();
+    const likesArray = likes.map((like) => like.replace(/[^0-9]/g, ''));
+    const likesCount = likesArray.length > 0 ? Number(likesArray[0]) : 0;
+
     const result = {
-      quotations: quotations.length,
-      placesMap: placesMap.length,
-      contents: contents.length,
-      contentsWithoutBlanks: contents.replace(/\s/g, '').length,
-      likes: Number(likes),
-      tags: tags.length,
-      replies: replies.length > 0 ? Number(replies[0].split(' ')[1]) : '0',
+      quotations: quotations.length ?? 0,
+      placesMap: placesMap.length ?? 0,
+      contents: contents.length ?? 0,
+      contentsWithoutBlanks: contents.replace(/\s/g, '').length ?? 0,
+      likes: likesCount ?? 0,
+      tags: tags.length ?? 0,
+      replies: replies.length > 0 ? Number(replies[0].split(' ')[1]) : 0,
     };
 
-    return result;
+    return new ViewSearchKeywordDetail(result);
   }
 }

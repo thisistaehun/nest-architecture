@@ -11,10 +11,4 @@ export class ViewItemSearchInput {
     description: '페이지',
   })
   page: number;
-
-  @Field(() => Boolean, {
-    description: '디테일 검색 여부',
-    defaultValue: false,
-  })
-  withDetail: boolean;
 }

@@ -5,6 +5,7 @@ import { Queue } from 'bull';
 import { InjectBrowser } from 'nest-puppeteer';
 import { Browser } from 'puppeteer';
 import { envVariables } from 'src/modules/infrastructure/config/env-config';
+import { IViewItemSearchJobData as IViewItemSearchJob } from '../consumer/view.item-search.job.data.type';
 import { ViewItemSearchInput } from '../dto/item-search/view.item-search.input';
 import { ViewSearchKeywordItem } from '../entities/view-search/view-search.keyword-item.entity';
 import { ViewSearchKeywordDetail } from '../entities/view-search/view-search.keyword.detail.entity';
@@ -19,7 +20,7 @@ export class ViewItemSearchUsecase {
     input: ViewItemSearchInput,
     userCode: string,
   ): Promise<ViewSearchKeywordItem[]> {
-    const { keyword, page, withDetail } = input;
+    const { keyword, page } = input;
     const viewGeneral = await axios.post(
       'https://api.datalab.tools/api/sdk/fetch/search/view/normal',
       {
@@ -33,25 +34,10 @@ export class ViewItemSearchUsecase {
     );
 
     const items = viewGeneral.data.items as ViewSearchKeywordItem[];
-    const itemsForJob = [];
-    if (withDetail) {
-      await Promise.all(
-        items.map(async (item) => {
-          const itemEntity = new ViewSearchKeywordItem(item);
-          const detail = await this.crawlDetailPage(item.content.url);
-          const detailEntity = new ViewSearchKeywordDetail(detail);
-          itemEntity.detail = detailEntity;
-          item = itemEntity;
-          itemsForJob.push(item);
-        }),
-      );
-    } else {
-      itemsForJob.push(...items);
-    }
 
-    const job = {
+    const job: IViewItemSearchJob = {
       name: keyword,
-      items: itemsForJob,
+      items,
       userCode,
     };
 
@@ -60,19 +46,8 @@ export class ViewItemSearchUsecase {
     return items;
   }
 
-  private async crawlDetailPage(url: string): Promise<any> {
+  private async crawlDetailPage(url: string): Promise<ViewSearchKeywordDetail> {
     const page = await this.browser.newPage();
-
-    await page.setRequestInterception(true);
-
-    page.on('request', (req) => {
-      if (req.resourceType() === 'image') {
-        req.abort();
-      } else {
-        req.continue();
-      }
-    });
-
     await page.goto(url);
 
     // 인용문, 장소 맵, 내용, 좋아요, 태그, 댓글 크롤링
@@ -99,12 +74,10 @@ export class ViewItemSearchUsecase {
           );
           return elements.map((element) => element.textContent.trim()).join('');
         }),
-
         // 좋아요 크롤링
-        page.evaluate(() => {
-          const element = document.querySelector('.u_likeit_list_btn');
-          return element ? element.textContent.trim() : '10';
-        }),
+        page.$$eval('div.btn_like', (divs) =>
+          divs.map((div) => div.textContent),
+        ),
         // 태그 크롤링
         page.evaluate(() => {
           const elements = Array.from(document.querySelectorAll('.post_tag'));
@@ -122,16 +95,19 @@ export class ViewItemSearchUsecase {
       ]);
 
     await page.close();
+    const likesArray = likes.map((like) => like.replace(/[^0-9]/g, ''));
+    const likesCount = likesArray.length > 0 ? Number(likesArray[0]) : 0;
+
     const result = {
-      quotations: quotations.length,
-      placesMap: placesMap.length,
-      contents: contents.length,
-      contentsWithoutBlanks: contents.replace(/\s/g, '').length,
-      likes: 10,
-      tags: tags.length,
+      quotations: quotations.length ?? 0,
+      placesMap: placesMap.length ?? 0,
+      contents: contents.length ?? 0,
+      contentsWithoutBlanks: contents.replace(/\s/g, '').length ?? 0,
+      likes: likesCount ?? 0,
+      tags: tags.length ?? 0,
       replies: replies.length > 0 ? Number(replies[0].split(' ')[1]) : 0,
     };
 
-    return result;
+    return new ViewSearchKeywordDetail(result);
   }
 }

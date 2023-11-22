@@ -1,6 +1,7 @@
-import { SearchKeyword } from '../entities/keyword/keyword.entity';
+import { ViewSearchKeywordItem } from '../entities/view-search/view-search.keyword-item.entity';
 
 export interface IViewItemSearchJobData {
-  keyword: SearchKeyword;
+  name: string;
+  items: ViewSearchKeywordItem[];
   userCode: string;
 }

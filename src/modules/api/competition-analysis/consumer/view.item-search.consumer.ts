@@ -9,6 +9,8 @@ import {
 import { DG_LOGGER } from 'src/symbols';
 import { ViewSearchCommandRepository } from '../cqrs/view-search.command.repository';
 import { SearchKeyword } from '../entities/keyword/keyword.entity';
+import { ViewSearchKeywordItem } from '../entities/view-search/view-search.keyword-item.entity';
+import { CrawlKeywordItemDetailUsecase } from '../usecase/crawl.keyword-item.detail.usecase';
 
 @Processor('competition-analysis')
 export class ViewItemSearchConsumer {
@@ -18,11 +20,22 @@ export class ViewItemSearchConsumer {
     @Inject(TRANSACTION_MANAGER)
     private readonly transactionManager: TransactionManager,
     private readonly viewSearchCommandRepository: ViewSearchCommandRepository,
+    private readonly crawlDetailUsecase: CrawlKeywordItemDetailUsecase,
   ) {}
 
   @Process('view-item-search')
   async execute(job: Job) {
     const keywordEntity = new SearchKeyword(job.data);
+    const itemsWithDetails = await Promise.all(
+      keywordEntity.items.map(async (item: ViewSearchKeywordItem) => {
+        const detail = await this.crawlDetailUsecase.execute(item.content.url);
+        item.detail = detail;
+        return item;
+      }),
+    );
+
+    keywordEntity.items = itemsWithDetails;
+
     await this.viewSearchCommandRepository.saveKeyword(
       keywordEntity,
       job.data.userCode,
