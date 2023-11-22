@@ -12,6 +12,9 @@ WORKDIR /proj
 ## 프로젝트의 모든 파일을 WORKDIR(/proj)로 복사합니다(.dockerignore 항목 제외)
 COPY . .
 
+## puppeteer를 사용하기 위해 chromium을 설치합니다.
+RUN apt-get update && apt-get install -y chromium
+
 ## Nest.js project의 종속성을 설치하고 빌드합니다.
 RUN yarn install
 RUN yarn build
