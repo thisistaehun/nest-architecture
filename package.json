@@ -49,6 +49,7 @@
     "axios": "^1.5.1",
     "bcrypt": "^5.1.1",
     "bull": "^4.11.3",
+    "chronium": "^0.0.6",
     "cls-hooked": "^4.2.2",
     "cross-env": "^7.0.3",
     "dotenv": "^16.3.1",

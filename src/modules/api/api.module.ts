@@ -18,6 +18,7 @@ import { UserModule } from './user/user.module';
     PuppeteerModule.forRoot(
       {
         pipe: true,
+        executablePath: '/usr/bin/chromium',
       },
       'BrowserInstanceName',
     ),

@@ -28,6 +28,12 @@ WORKDIR /proj
 ## Step 1의 builder에서 build된 nestjs 프로젝트를 파일을 가져옵니다.
 COPY --from=builder /proj ./
 
+## Puppeteer 종속성 설치
+RUN apt-get update \
+    && apt-get install -y wget gnupg \
+    && apt-get install -y chromium \
+    && rm -rf /var/lib/apt/lists/*
+
 ARG ENVIRONMENT
 ENV ENVIRONMENT=${ENVIRONMENT}
 
