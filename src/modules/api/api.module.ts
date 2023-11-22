@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { PuppeteerModule } from 'nest-puppeteer';
 import { CompetitionAnalysisModule } from './competition-analysis/competition-analysis.module';
 import { PaymentModule } from './payment/payment.module';
 import { PointModule } from './point/point.module';
@@ -15,13 +14,6 @@ import { UserModule } from './user/user.module';
     UserRankPolicyModule,
     PaymentModule,
     CompetitionAnalysisModule,
-    PuppeteerModule.forRoot(
-      {
-        pipe: true,
-        executablePath: '/usr/bin/chromium',
-      },
-      'BrowserInstanceName',
-    ),
   ],
 })
 export class ApiModule {}

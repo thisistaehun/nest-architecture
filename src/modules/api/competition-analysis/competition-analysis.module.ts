@@ -1,7 +1,6 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PuppeteerModule } from 'nest-puppeteer';
 import { CompetitionAnalysisResolver } from './competition-analysis.resolver';
 import { CompetitionAnalysisService } from './competition-analysis.service';
 import { ViewItemSearchConsumer } from './consumer/view.item-search.consumer';
@@ -24,7 +23,6 @@ import { ViewItemSearchUsecase } from './usecase/view.item-search.usecase';
 
 @Module({
   imports: [
-    PuppeteerModule.forFeature(),
     BullModule.registerQueue({
       name: 'competition-analysis',
     }),

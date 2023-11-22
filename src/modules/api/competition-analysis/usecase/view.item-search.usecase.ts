@@ -2,8 +2,7 @@ import { InjectQueue } from '@nestjs/bull';
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { Queue } from 'bull';
-import { InjectBrowser } from 'nest-puppeteer';
-import { Browser } from 'puppeteer';
+import * as puppeteer from 'puppeteer';
 import { envVariables } from 'src/modules/infrastructure/config/env-config';
 import { IViewItemSearchJobData as IViewItemSearchJob } from '../consumer/view.item-search.job.data.type';
 import { ViewItemSearchInput } from '../dto/item-search/view.item-search.input';
@@ -12,10 +11,7 @@ import { ViewSearchKeywordDetail } from '../entities/view-search/view-search.key
 
 @Injectable()
 export class ViewItemSearchUsecase {
-  constructor(
-    @InjectBrowser('BrowserInstanceName') private readonly browser: Browser,
-    @InjectQueue('competition-analysis') private queue: Queue,
-  ) {}
+  constructor(@InjectQueue('competition-analysis') private queue: Queue) {}
   async execute(
     input: ViewItemSearchInput,
     userCode: string,
@@ -47,7 +43,11 @@ export class ViewItemSearchUsecase {
   }
 
   private async crawlDetailPage(url: string): Promise<ViewSearchKeywordDetail> {
-    const page = await this.browser.newPage();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
     await page.goto(url);
 
     // 인용문, 장소 맵, 내용, 좋아요, 태그, 댓글 크롤링

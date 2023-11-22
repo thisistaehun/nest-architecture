@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { InjectBrowser } from 'nest-puppeteer';
-import { Browser } from 'puppeteer';
+import * as puppeteer from 'puppeteer';
 import { CrawlSearchType } from '../type/crawl.search-type';
 
 @Injectable()
 export class CrawlSearchTypeUsecase {
-  constructor(
-    @InjectBrowser('BrowserInstanceName') private readonly browser: Browser,
-  ) {}
-
   async execute(keyword: string) {
-    const page = await this.browser.newPage();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    const page = await browser.newPage();
     await page.goto(
       `https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=${keyword}`,
     );
