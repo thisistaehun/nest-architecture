@@ -1,12 +1,12 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonBulkEntity } from 'src/modules/infrastructure/database/typeorm/common.bulk.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { ViewSearchKeywordItem } from './view-search.keyword-item.entity';
+import { SearchKeywordItem } from './search.keyword-item.entity';
 
 @InputType({ isAbstract: true })
 @ObjectType()
 @Entity({ name: 'keyword_item_channel' })
-export class ViewSearchKeywordItemChannel extends CommonBulkEntity {
+export class SearchKeywordItemChannel extends CommonBulkEntity {
   @Field(() => String, { nullable: true })
   @Column({ name: 'highlight', type: 'text', nullable: true })
   highlight: string;
@@ -28,7 +28,7 @@ export class ViewSearchKeywordItemChannel extends CommonBulkEntity {
   serviceId: string;
 
   @ManyToOne(
-    () => ViewSearchKeywordItem,
+    () => SearchKeywordItem,
     (keywordItem) => keywordItem.channel,
     {
       onUpdate: 'CASCADE',
@@ -36,9 +36,9 @@ export class ViewSearchKeywordItemChannel extends CommonBulkEntity {
     },
   )
   @JoinColumn({ name: 'keyword_item_id' })
-  keywordItem: ViewSearchKeywordItem;
+  keywordItem: SearchKeywordItem;
 
-  constructor(partial: Partial<ViewSearchKeywordItemChannel>) {
+  constructor(partial: Partial<SearchKeywordItemChannel>) {
     super();
     Object.assign(this, partial);
   }

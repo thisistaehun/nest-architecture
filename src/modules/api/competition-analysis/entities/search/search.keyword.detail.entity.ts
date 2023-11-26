@@ -1,12 +1,12 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonBulkEntity } from 'src/modules/infrastructure/database/typeorm/common.bulk.entity';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { ViewSearchKeywordItem } from './view-search.keyword-item.entity';
+import { SearchKeywordItem } from './search.keyword-item.entity';
 
 @InputType({ isAbstract: true })
 @ObjectType()
 @Entity()
-export class ViewSearchKeywordDetail extends CommonBulkEntity {
+export class SearchKeywordDetail extends CommonBulkEntity {
   @Field(() => Number, {
     description: '인용문 개수',
     nullable: true,
@@ -61,14 +61,14 @@ export class ViewSearchKeywordDetail extends CommonBulkEntity {
   @Column({ name: 'replies', type: 'int', default: 0, nullable: true })
   replies: number;
 
-  @OneToOne(() => ViewSearchKeywordItem, (keywordItem) => keywordItem.detail, {
+  @OneToOne(() => SearchKeywordItem, (keywordItem) => keywordItem.detail, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'keyword_item_id' })
-  keywordItem: ViewSearchKeywordItem;
+  keywordItem: SearchKeywordItem;
 
-  constructor(partial: Partial<ViewSearchKeywordDetail>) {
+  constructor(partial: Partial<SearchKeywordDetail>) {
     super();
     Object.assign(this, partial);
   }

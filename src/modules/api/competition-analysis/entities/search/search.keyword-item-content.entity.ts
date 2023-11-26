@@ -1,13 +1,13 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonBulkEntity } from 'src/modules/infrastructure/database/typeorm/common.bulk.entity';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
-import { ViewSearchKeywordItemContentTag } from './view-search.keyword-item.content.tag.entity';
-import { ViewSearchKeywordItem } from './view-search.keyword-item.entity';
+import { SearchKeywordItemContentTag } from './search.keyword-item.content.tag.entity';
+import { SearchKeywordItem } from './search.keyword-item.entity';
 
 @InputType({ isAbstract: true })
 @ObjectType()
 @Entity({ name: 'keyword_item_content' })
-export class ViewSearchKeywordItemContent extends CommonBulkEntity {
+export class SearchKeywordItemContent extends CommonBulkEntity {
   @Field(() => Number, { nullable: true })
   @Column({ name: 'cr_rank', type: 'float', nullable: true })
   crRank: number;
@@ -65,12 +65,12 @@ export class ViewSearchKeywordItemContent extends CommonBulkEntity {
   @Column({ name: 'media_url', type: 'varchar', length: 255, nullable: true })
   createdAt: string;
 
-  @Field(() => [ViewSearchKeywordItemContentTag], { nullable: true })
+  @Field(() => [SearchKeywordItemContentTag], { nullable: true })
   @OneToMany(
-    () => ViewSearchKeywordItemContentTag,
+    () => SearchKeywordItemContentTag,
     (tags) => tags.keywordItemContent,
   )
-  tags: ViewSearchKeywordItemContentTag[];
+  tags: SearchKeywordItemContentTag[];
 
   @Field(() => String, { nullable: true })
   serviceType: string;
@@ -81,14 +81,14 @@ export class ViewSearchKeywordItemContent extends CommonBulkEntity {
   @Field(() => String, { nullable: true })
   contentId: string;
 
-  @OneToOne(() => ViewSearchKeywordItem, (keywordItem) => keywordItem.content, {
+  @OneToOne(() => SearchKeywordItem, (keywordItem) => keywordItem.content, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'keyword_item_id' })
-  keywordItem: ViewSearchKeywordItem;
+  keywordItem: SearchKeywordItem;
 
-  constructor(partial: Partial<ViewSearchKeywordItemContent>) {
+  constructor(partial: Partial<SearchKeywordItemContent>) {
     super();
     Object.assign(this, partial);
   }

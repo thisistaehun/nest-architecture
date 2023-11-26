@@ -1,12 +1,12 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonBulkEntity } from 'src/modules/infrastructure/database/typeorm/common.bulk.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { ViewSearchKeywordItemContent } from './view-search.keyword-item-content.entity';
+import { SearchKeywordItemContent } from './search.keyword-item-content.entity';
 
 @InputType({ isAbstract: true })
 @ObjectType()
 @Entity({ name: 'keyword_item_content_tag' })
-export class ViewSearchKeywordItemContentTag extends CommonBulkEntity {
+export class SearchKeywordItemContentTag extends CommonBulkEntity {
   @Field(() => String, { nullable: true })
   @Column({
     name: 'query',
@@ -18,18 +18,18 @@ export class ViewSearchKeywordItemContentTag extends CommonBulkEntity {
   query: string;
 
   @ManyToOne(
-    () => ViewSearchKeywordItemContent,
+    () => SearchKeywordItemContent,
     (keywordItemContent) => keywordItemContent.tags,
     {
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
   )
-  @Field(() => ViewSearchKeywordItemContent, { nullable: true })
+  @Field(() => SearchKeywordItemContent, { nullable: true })
   @JoinColumn({ name: 'keyword_item_content_id' })
-  keywordItemContent: ViewSearchKeywordItemContent;
+  keywordItemContent: SearchKeywordItemContent;
 
-  constructor(partial: Partial<ViewSearchKeywordItemContentTag>) {
+  constructor(partial: Partial<SearchKeywordItemContentTag>) {
     super();
     Object.assign(this, partial);
   }

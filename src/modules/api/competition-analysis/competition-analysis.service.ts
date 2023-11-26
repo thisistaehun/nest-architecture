@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ViewSearchQueryRepository } from './cqrs/view-search.query.repository';
+import { SearchQueryRepository } from './cqrs/search.query.repository';
 import { SearchKeyword } from './entities/keyword/keyword.entity';
 
 @Injectable()
 export class CompetitionAnalysisService {
   constructor(
-    private readonly viewSearchQueryRepository: ViewSearchQueryRepository,
+    private readonly viewSearchQueryRepository: SearchQueryRepository,
   ) {}
 
   findSearchKeywords(userCode: string): Promise<SearchKeyword[]> {

@@ -2,8 +2,8 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { CrawlSearchType } from '../../type/crawl.search-type';
+import { SearchKeywordItem } from '../search/search.keyword-item.entity';
 import { SmartBlockKeyword } from '../smart-block/smart-block.keyword.entity';
-import { ViewSearchKeywordItem } from '../view-search/view-search.keyword-item.entity';
 import { KeywordToUser } from './keyword-to-user.entity';
 
 @InputType({ isAbstract: true })
@@ -23,13 +23,13 @@ export class SearchKeyword extends CommonEntity {
   type: CrawlSearchType;
 
   @OneToMany(
-    () => ViewSearchKeywordItem,
+    () => SearchKeywordItem,
     (keywordItems) => keywordItems.keyword,
   )
-  @Field(() => [ViewSearchKeywordItem], {
+  @Field(() => [SearchKeywordItem], {
     description: '검색 키워드 아이템',
   })
-  items: ViewSearchKeywordItem[];
+  items: SearchKeywordItem[];
 
   @OneToMany(() => KeywordToUser, (keywordToUser) => keywordToUser.keyword)
   keywordToUsers: KeywordToUser[];

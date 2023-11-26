@@ -1,22 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { InjectQueue } from '@nestjs/bull';
+import { Inject, Injectable } from '@nestjs/common';
+import { Queue } from 'bull';
 import * as puppeteer from 'puppeteer';
-import { ViewSearchKeywordDetail } from '../entities/view-search/view-search.keyword.detail.entity';
+import { DgLoggerImpl } from 'src/modules/infrastructure/logger/logger.implement';
+import { DG_LOGGER } from 'src/symbols';
+import { SearchQueryRepository } from '../cqrs/search.query.repository';
+import { SearchKeywordDetail } from '../entities/search/search.keyword.detail.entity';
 
 @Injectable()
 export class CrawlKeywordItemDetailUsecase {
-  constructor() {}
+  constructor(
+    @InjectQueue('item-detail')
+    private readonly queue: Queue,
+    private readonly repository: SearchQueryRepository,
+    @Inject(DG_LOGGER)
+    private readonly logger: DgLoggerImpl
+  ) {}
 
-  public async execute(url: string): Promise<ViewSearchKeywordDetail> {
-    return this.crawlDetailPage(url);
+  public async execute(url: string): Promise<SearchKeywordDetail> {
+    const item = await this.repository.findItemByUrl(url);
+    const detail = await this.crawlDetailPage(url);
+    detail.keywordItem = item;
+    await this.queue.add('item-detail-saving', {
+      detail,
+    });
+    this.logger.log(`Successfully add detail for queue`);
+
+    return detail;
   }
 
-  private async crawlDetailPage(url: string): Promise<ViewSearchKeywordDetail> {
+  private async crawlDetailPage(url: string): Promise<SearchKeywordDetail> {
     const browser = await puppeteer.launch({
-      headless: true,
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: true
     });
+    this.logger.log('hi');
     const page = await browser.newPage();
     await page.goto(url);
+    this.logger.log(`Successfully go to the page ${url}`);
 
     // 인용문, 장소 맵, 내용, 좋아요, 태그, 댓글 크롤링
     const [quotations, placesMap, contents, likes, tags, replies] =
@@ -61,8 +82,9 @@ export class CrawlKeywordItemDetailUsecase {
           return elements.map((element) => element.textContent.trim());
         }),
       ]);
-
     await page.close();
+
+    this.logger.log(`Successfully crawl the detail data ${url}`);
     const likesArray = likes.map((like) => like.replace(/[^0-9]/g, ''));
     const likesCount = likesArray.length > 0 ? Number(likesArray[0]) : 0;
 
@@ -76,6 +98,6 @@ export class CrawlKeywordItemDetailUsecase {
       replies: replies.length > 0 ? Number(replies[0].split(' ')[1]) : 0,
     };
 
-    return new ViewSearchKeywordDetail(result);
+    return new SearchKeywordDetail(result);
   }
 }
