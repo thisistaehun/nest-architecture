@@ -1,6 +1,7 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { CrawlSearchType } from '../../type/crawl.search-type';
 import { SmartBlockKeyword } from '../smart-block/smart-block.keyword.entity';
 import { ViewSearchKeywordItem } from '../view-search/view-search.keyword-item.entity';
 import { KeywordToUser } from './keyword-to-user.entity';
@@ -14,6 +15,12 @@ export class SearchKeyword extends CommonEntity {
     description: '검색 키워드',
   })
   name: string;
+
+  @Column({ name: 'type', type: 'varchar', length: 255 })
+  @Field(() => CrawlSearchType, {
+    description: '검색 키워드 타입',
+  })
+  type: CrawlSearchType;
 
   @OneToMany(
     () => ViewSearchKeywordItem,
