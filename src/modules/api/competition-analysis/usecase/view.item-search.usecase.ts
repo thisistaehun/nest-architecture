@@ -27,7 +27,11 @@ export class ViewItemSearchUsecase {
       },
     );
 
-    const items = viewGeneral.data.items as ViewSearchKeywordItem[];
+
+    const items = viewGeneral.data.items.slice(
+      0,
+      10,
+    ) as ViewSearchKeywordItem[];
 
     const job: IViewItemSearchJob = {
       name: keyword,
