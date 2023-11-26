@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 import { SearchKeyword } from '../entities/keyword/keyword.entity';
-import { SearchKeywordItem } from '../entities/search/search.keyword-item.entity';
+import { SearchKeywordItem } from '../entities/search/search-keyword-item.entity';
 
 @Injectable()
 export class SearchQueryRepository {

@@ -1,8 +1,8 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
-import { KeywordToUser } from '../../competition-analysis/entities/keyword/keyword-to-user.entity';
 import { UserWallet } from '../../point/entities/total-point.entity';
+import { KeywordToUser } from '../../search-keyword/entities/keyword/keyword-to-user.entity';
 import { LoginType } from '../type/login.type';
 import { UserRank } from '../type/user.rank.type';
 import { UserRole } from '../type/user.role';

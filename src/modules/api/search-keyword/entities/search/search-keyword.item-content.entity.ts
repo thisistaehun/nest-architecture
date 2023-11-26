@@ -1,8 +1,8 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonBulkEntity } from 'src/modules/infrastructure/database/typeorm/common.bulk.entity';
 import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
-import { SearchKeywordItemContentTag } from './search.keyword-item.content.tag.entity';
-import { SearchKeywordItem } from './search.keyword-item.entity';
+import { SearchKeywordItem } from './search-keyword-item.entity';
+import { SearchKeywordItemContentTag } from './search-keyword.item-content.tag.entity';
 
 @InputType({ isAbstract: true })
 @ObjectType()

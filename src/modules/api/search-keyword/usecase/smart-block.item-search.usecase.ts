@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { envVariables } from 'src/modules/infrastructure/config/env-config';
 import { SmartBlockKeywordSearchInput } from '../dto/smart-block/smart-block.keyword.search.input';
-import { SearchKeywordItem } from '../entities/search/search.keyword-item.entity';
+import { SearchKeywordItem } from '../entities/search/search-keyword-item.entity';
 
 @Injectable()
 export class SmartBlockItemSearchUsecase {

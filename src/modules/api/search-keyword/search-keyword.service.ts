@@ -3,7 +3,7 @@ import { SearchQueryRepository } from './cqrs/search.query.repository';
 import { SearchKeyword } from './entities/keyword/keyword.entity';
 
 @Injectable()
-export class CompetitionAnalysisService {
+export class SearchKeywordService {
   constructor(
     private readonly viewSearchQueryRepository: SearchQueryRepository,
   ) {}

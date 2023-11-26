@@ -5,9 +5,9 @@ import { EntityManager } from 'typeorm';
 import { User } from '../../../user/entities/user.entity';
 import { KeywordToUser } from '../../entities/keyword/keyword-to-user.entity';
 import { SearchKeyword } from '../../entities/keyword/keyword.entity';
-import { SearchKeywordItemChannel } from '../../entities/search/search.keyword-item-channel.entity';
-import { SearchKeywordItemContent } from '../../entities/search/search.keyword-item-content.entity';
-import { SearchKeywordItem } from '../../entities/search/search.keyword-item.entity';
+import { SearchKeywordItem } from '../../entities/search/search-keyword-item.entity';
+import { SearchKeywordItemChannel } from '../../entities/search/search-keyword.item-channel.entity';
+import { SearchKeywordItemContent } from '../../entities/search/search-keyword.item-content.entity';
 
 @Injectable()
 export class ItemSearchTransaction {

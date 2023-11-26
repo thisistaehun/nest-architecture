@@ -3,7 +3,7 @@ import axios from "axios";
 import { envVariables } from "src/modules/infrastructure/config/env-config";
 import { DgLoggerImpl } from "src/modules/infrastructure/logger/logger.implement";
 import { DG_LOGGER } from "src/symbols";
-import { SearchKeywordStat } from "../entities/search/search.keyword.stat.entity";
+import { SearchKeywordStat } from "../entities/search/search-keyword.stat.entity";
 
 @Injectable()
 export class GetStatUsecase { 

@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { CompetitionAnalysisModule } from './competition-analysis/competition-analysis.module';
 import { PaymentModule } from './payment/payment.module';
 import { PointModule } from './point/point.module';
 import { UserRankPolicyModule } from './policy/user-rank.policy.module';
 import { ProductModule } from './product/product.module';
+import { SearchKeywordModule } from './search-keyword/search-keyword.module';
+import { TextAnalysisModule } from './text-analysis/text-analysis.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -13,7 +14,8 @@ import { UserModule } from './user/user.module';
     ProductModule,
     UserRankPolicyModule,
     PaymentModule,
-    CompetitionAnalysisModule,
+    SearchKeywordModule,
+    TextAnalysisModule
   ],
 })
 export class ApiModule {}

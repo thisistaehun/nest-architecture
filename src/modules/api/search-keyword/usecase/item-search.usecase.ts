@@ -5,7 +5,7 @@ import { Queue } from 'bull';
 import { envVariables } from 'src/modules/infrastructure/config/env-config';
 import { ItemSearchJobData as IViewItemSearchJob } from '../consumer/item-search.job.data.type';
 import { ViewItemSearchInput } from '../dto/item-search/view.item-search.input';
-import { SearchKeywordItem } from '../entities/search/search.keyword-item.entity';
+import { SearchKeywordItem } from '../entities/search/search-keyword-item.entity';
 
 @Injectable()
 export class ItemSearchUsecase {

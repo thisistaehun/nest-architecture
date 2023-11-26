@@ -2,7 +2,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { CrawlSearchType } from '../../type/crawl.search-type';
-import { SearchKeywordItem } from '../search/search.keyword-item.entity';
+import { SearchKeywordItem } from '../search/search-keyword-item.entity';
 import { SmartBlockKeyword } from '../smart-block/smart-block.keyword.entity';
 import { KeywordToUser } from './keyword-to-user.entity';
 

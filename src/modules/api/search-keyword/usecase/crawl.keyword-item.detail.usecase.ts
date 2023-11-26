@@ -5,7 +5,7 @@ import * as puppeteer from 'puppeteer';
 import { DgLoggerImpl } from 'src/modules/infrastructure/logger/logger.implement';
 import { DG_LOGGER } from 'src/symbols';
 import { SearchQueryRepository } from '../cqrs/search.query.repository';
-import { SearchKeywordDetail } from '../entities/search/search.keyword.detail.entity';
+import { SearchKeywordDetail } from '../entities/search/search-keyword.detail.entity';
 
 @Injectable()
 export class CrawlKeywordItemDetailUsecase {

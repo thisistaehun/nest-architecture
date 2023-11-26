@@ -1,4 +1,4 @@
-import { SearchKeywordItem } from '../entities/search/search.keyword-item.entity';
+import { SearchKeywordItem } from '../entities/search/search-keyword-item.entity';
 
 export interface ItemSearchJobData {
   name: string;

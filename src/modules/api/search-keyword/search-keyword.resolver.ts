@@ -1,15 +1,15 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from 'src/modules/infrastructure/auth/decorator/current.user.decorator';
 import { UserAuth } from '../user/type/user.auth.type';
-import { CompetitionAnalysisService } from './competition-analysis.service';
 import { CrawlSearchTypeOutput } from './dto/crawl.search-type/crawl.search-type.output';
 import { ViewItemSearchInput } from './dto/item-search/view.item-search.input';
 import { SmartBlockKeywordSearchInput } from './dto/smart-block/smart-block.keyword.search.input';
 import { SearchKeyword } from './entities/keyword/keyword.entity';
-import { SearchKeywordItem } from './entities/search/search.keyword-item.entity';
-import { SearchKeywordDetail } from './entities/search/search.keyword.detail.entity';
-import { SearchKeywordStat } from './entities/search/search.keyword.stat.entity';
+import { SearchKeywordItem } from './entities/search/search-keyword-item.entity';
+import { SearchKeywordDetail } from './entities/search/search-keyword.detail.entity';
+import { SearchKeywordStat } from './entities/search/search-keyword.stat.entity';
 import { SmartBlockKeyword } from './entities/smart-block/smart-block.keyword.entity';
+import { SearchKeywordService } from './search-keyword.service';
 import { CrawlKeywordItemDetailUsecase } from './usecase/crawl.keyword-item.detail.usecase';
 import { CrawlSearchTypeUsecase } from './usecase/crawl.search-type.usecase';
 import { GetCategoryUsecase } from './usecase/get-category.usecase';
@@ -19,7 +19,7 @@ import { SmartBlockItemSearchUsecase } from './usecase/smart-block.item-search.u
 import { SmartBlockUsecase } from './usecase/smart-block.usecase';
 
 @Resolver()
-export class CompetitionAnalysisResolver {
+export class SearchKeywordResolver {
   constructor(
     private readonly searchKeywordUsecase: ItemSearchUsecase,
     private readonly smartBlockUsecase: SmartBlockUsecase,
@@ -28,7 +28,7 @@ export class CompetitionAnalysisResolver {
     private readonly crawlSearchTypeUsecase: CrawlSearchTypeUsecase,
     private readonly crawlKeywordItemDetailUsecase: CrawlKeywordItemDetailUsecase,
     private readonly getStatUsecase: GetStatUsecase,
-    private readonly competitionAnalysisService: CompetitionAnalysisService,
+    private readonly competitionAnalysisService: SearchKeywordService,
   ) {}
   @Mutation(() => [SearchKeywordItem], {
     description: '경쟁도 분석 검색 키워드로 키워드 TOP10 포스팅 검색을 진행합니다. (뷰, 에어 서치)'

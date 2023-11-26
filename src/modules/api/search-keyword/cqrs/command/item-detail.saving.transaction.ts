@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { DgLoggerImpl } from "src/modules/infrastructure/logger/logger.implement";
 import { DG_LOGGER } from "src/symbols";
 import { EntityManager } from "typeorm";
-import { SearchKeywordDetail } from "../../entities/search/search.keyword.detail.entity";
+import { SearchKeywordDetail } from "../../entities/search/search-keyword.detail.entity";
 
 @Injectable()
 export class ItemDetailSavingTransaction {
