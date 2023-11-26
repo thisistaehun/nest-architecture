@@ -15,15 +15,6 @@ export class ViewItemSearchUsecase {
     userCode: string,
   ): Promise<ViewSearchKeywordItem[]> {
     const { keyword, page } = input;
-    const data = { identifier: 'tamoskin@naver.com', password: '!ncn2011ko' };
-    const token = await axios.post('https://api.datalab.tools/api/auth/local', {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      data,
-    });
-    console.log(token);
-
     const viewGeneral = await axios.post(
       'https://api.datalab.tools/api/sdk/fetch/search/view/normal',
       {
