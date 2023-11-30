@@ -28,7 +28,7 @@ export class SearchKeywordResolver {
     private readonly crawlSearchTypeUsecase: CrawlSearchTypeUsecase,
     private readonly crawlKeywordItemDetailUsecase: CrawlKeywordItemDetailUsecase,
     private readonly getStatUsecase: GetStatUsecase,
-    private readonly competitionAnalysisService: SearchKeywordService,
+    private readonly searchKeywordService: SearchKeywordService,
   ) {}
   @Mutation(() => [SearchKeywordItem], {
     description: '경쟁도 분석 검색 키워드로 키워드 TOP10 포스팅 검색을 진행합니다. (뷰, 에어 서치)'
@@ -82,7 +82,14 @@ export class SearchKeywordResolver {
     nullable: true
   })
   async searchKeywords(@CurrentUser('user') user: UserAuth) {
-    return this.competitionAnalysisService.findSearchKeywords(user.code);
+    return this.searchKeywordService.findSearchKeywords(user.code);
+  }
+
+  @Query(() => SearchKeyword, {
+    description: 'DB에 저장된 특정 키워드에 대한 아이템 목록을 검색합니다.'
+  })
+  async searchKeyword(@Args('keyword') keyword: string) {
+    return this.searchKeywordService.findSearchKeyword(keyword);
   }
 
   @Mutation(() => SearchKeywordStat, {

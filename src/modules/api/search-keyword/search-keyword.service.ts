@@ -11,4 +11,8 @@ export class SearchKeywordService {
   findSearchKeywords(userCode: string): Promise<SearchKeyword[]> {
     return this.viewSearchQueryRepository.findSearchKeywords(userCode);
   }
+
+  findSearchKeyword(keyword: string): Promise<SearchKeyword> {
+    return this.viewSearchQueryRepository.findSearchKeyword(keyword);
+  }
 }
