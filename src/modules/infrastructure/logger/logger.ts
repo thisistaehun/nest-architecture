@@ -7,4 +7,4 @@ export interface DGLogger extends NestLoggerService {
   debug<T>(message: string, context?: T): void;
   verbose<T>(message: string, context?: T): void;
 }
-export const ONTOL_LOGGER = Symbol('OntolLogger');
+export const DG_LOGGER = Symbol('DG_LOGGER');

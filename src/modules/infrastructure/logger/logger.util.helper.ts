@@ -74,7 +74,7 @@ export class LoggerUtilHelper {
         Winston.format.errors({ stack: true }),
         Winston.format.timestamp({ format: 'isoDateTime' }),
         Winston.format.printf((info: Winston.Logform.TransformableInfo) => {
-          return `[Ontol 1.0] [${env}] ${info.message} ${info.timestamp
+          return `[dg-server] [${env}] ${info.message} ${info.timestamp
             .slice(0, 19)
             .replace('T', ' ')}`;
         }),
