@@ -1,7 +1,9 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { CommonEntity } from 'src/modules/infrastructure/database/typeorm/common.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { PostType } from '../type/post.type';
 import { PostDetailKeyword } from './post-detail-keyword.entity';
+import { ShuffledPost } from './shuffled-post.entity';
 
 @ObjectType()
 @Entity({ name: 'post_detail' })
@@ -17,6 +19,12 @@ export class PostDetail extends CommonEntity {
   })
   @Column({ name: 'target_url', type: 'varchar', length: 255 })
   targetUrl: string;
+
+  @Field(() => PostType, {
+    description: '포스트 타입',
+  })
+  @Column({ name: 'post_type', type: 'enum', enum: PostType })
+  postType: PostType;
 
   @Field(() => String, {
     description: '내용',
@@ -53,6 +61,12 @@ export class PostDetail extends CommonEntity {
     description: '포스트 키워드',
   })
   keywords: PostDetailKeyword[];
+
+  @OneToMany(() => ShuffledPost, (shuffledPost) => shuffledPost.postDetail)
+  @Field(() => [ShuffledPost], {
+    description: '셔플된 포스트',
+  })
+  shuffledPosts: ShuffledPost[];
 
   constructor(partial: Partial<PostDetail>) {
     super();

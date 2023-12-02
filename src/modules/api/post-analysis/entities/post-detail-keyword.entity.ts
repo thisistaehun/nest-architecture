@@ -12,6 +12,12 @@ export class PostDetailKeyword extends CommonEntity {
   @Column({ name: 'name', type: 'varchar', length: 255 })
   name: string;
 
+  @Field(() => [String], {
+    description: '키워드가 포함된 형태소들',
+  })
+  @Column({ name: 'morphemes', type: 'varchar', length: 255 })
+  morphemes: string[];
+
   @Field(() => Int, {
     description: '키워드 빈도수',
   })
