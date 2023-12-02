@@ -27,14 +27,10 @@ export class SearchKeywordItemChannel extends CommonBulkEntity {
   @Column({ name: 'service_id', type: 'text', nullable: true })
   serviceId: string;
 
-  @ManyToOne(
-    () => SearchKeywordItem,
-    (keywordItem) => keywordItem.channel,
-    {
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE',
-    },
-  )
+  @ManyToOne(() => SearchKeywordItem, (keywordItem) => keywordItem.channel, {
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'keyword_item_id' })
   keywordItem: SearchKeywordItem;
 

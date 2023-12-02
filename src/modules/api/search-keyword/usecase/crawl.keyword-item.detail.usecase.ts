@@ -14,7 +14,7 @@ export class CrawlKeywordItemDetailUsecase {
     private readonly queue: Queue,
     private readonly repository: SearchQueryRepository,
     @Inject(DG_LOGGER)
-    private readonly logger: DgLoggerImpl
+    private readonly logger: DgLoggerImpl,
   ) {}
 
   public async execute(url: string): Promise<SearchKeywordDetail> {
@@ -30,10 +30,7 @@ export class CrawlKeywordItemDetailUsecase {
   }
 
   private async crawlDetailPage(url: string): Promise<SearchKeywordDetail> {
-    const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      headless: true
-    });
+    const browser = await puppeteer.launch({});
     this.logger.log('hi');
     const page = await browser.newPage();
     await page.goto(url);
