@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: 'dg-server',
-      script: 'dist/src/main.js',
+      script: 'dist/main.js',
       instances: 2,
       exec_mode: 'cluster',
       log_date_format: 'YYYY-MM-DD HH:mm Z',

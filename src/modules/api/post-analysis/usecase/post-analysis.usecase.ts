@@ -11,8 +11,6 @@ import { PostType } from '../type/post.type';
 
 @Injectable()
 export class PostAnalysisUsecase {
-  constructor() {}
-
   public async execute(input: PostAnalysisInput): Promise<PostDetail[]> {
     const postDetails: PostDetail[] = [];
 
@@ -98,12 +96,15 @@ export class PostAnalysisUsecase {
     const keywords = [];
 
     for (const keyword of sortedKeywords) {
-      let keywordCount = 0;
+      const samewords = [];
       const morphemes = [];
       for (const content of arrayContents) {
         if (content.includes(keyword)) {
-          keywordCount++;
-          morphemes.push(content);
+          if (content === keyword) {
+            samewords.push(content);
+          } else {
+            morphemes.push(content);
+          }
           arrayContents.splice(arrayContents.indexOf(content), 1);
         }
       }
@@ -111,11 +112,13 @@ export class PostAnalysisUsecase {
       keywords.push(
         new PostDetailKeyword({
           name: keyword,
-          frequency: keywordCount,
+          frequency: samewords.length,
+          morphemeFrequency: morphemes.length,
           morphemes,
         }),
       );
     }
+
     return keywords;
   }
 }
