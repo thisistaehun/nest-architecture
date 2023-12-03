@@ -89,7 +89,7 @@ jobs:
           proxy_port: 22
           script: |
             cd ${{ env.DEV_APPLICATION_PATH }}
-            if yarn start:pm2; then
+            if /home/ubuntu/.nvm/versions/node/v20.8.1/bin/pm2 restart all; then
               echo "Server restarted successfully"
             else
               echo "Server restarted failed" && exit 1
