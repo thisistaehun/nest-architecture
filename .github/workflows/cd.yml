@@ -9,6 +9,8 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  DEV_EC2_PRIVATE_IP: ${{ secrets.DEV_EC2_PRIVATE_IP }}
+  DEV_BASTION_PUBLIC_IP: ${{ secrets.DEV_BASTION_IP }}
   DEV_ENV_CONTENT: ${{ vars.DEV_ENV_CONTENT }}
   DEV_APPLICATION_PATH: ${{ vars.DEV_APPLICATION_PATH }}
 
@@ -26,10 +28,15 @@ jobs:
       - name: Copy .env.dev to EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ env.ELASTIC_IP }}
+          host: ${{ secrets.DEV_EC2_PRIVATE_IP }}
           username: ubuntu
-          key: ${{ env.SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: 22
+          debug: true
+          proxy_host: ${{ secrets.DEV_BASTION_IP }}
+          proxy_username: ubuntu
+          proxy_key: ${{ secrets.SSH_KEY }}
+          proxy_port: 22
           script: |
             cd ${{ env.DEV_APPLICATION_PATH }}
             mkdir -p ./config
@@ -38,10 +45,15 @@ jobs:
       - name: Git pull
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ env.ELASTIC_IP }}
+          host: ${{ secrets.DEV_EC2_PRIVATE_IP }}
           username: ubuntu
-          key: ${{ env.SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: 22
+          debug: true
+          proxy_host: ${{ secrets.DEV_BASTION_PUBLIC_IP }}
+          proxy_username: ubuntu
+          proxy_key: ${{ secrets.SSH_KEY }}
+          proxy_port: 22
           script: |
             cd ${{ env.DEV_APPLICATION_PATH }}
             if git pull origin develop; then
