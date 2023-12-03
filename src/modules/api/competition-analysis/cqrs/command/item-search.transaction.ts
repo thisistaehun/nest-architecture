@@ -22,6 +22,11 @@ export class ItemSearchTransaction {
       let savedKeyword = await this.entityManager.findOne(SearchKeyword, {
         where: {
           name: keyword.name,
+          keywordToUsers: {
+            user: {
+              code: userCode,
+            },
+          },
         },
         relations: {
           items: {
@@ -49,7 +54,6 @@ export class ItemSearchTransaction {
           }),
         );
       } else {
-        console.log('키워드가 이미 존재합니다.');
         await this.entityManager.transaction(
           async (transactionManager: EntityManager) => {
             try {

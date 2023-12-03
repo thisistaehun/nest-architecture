@@ -8,7 +8,7 @@ import { ViewItemSearchInput } from '../dto/item-search/view.item-search.input';
 import { SearchKeywordItem } from '../entities/search/search-keyword-item.entity';
 
 @Injectable()
-export class ItemSearchUsecase {
+export class ViewSearchUsecase {
   constructor(@InjectQueue('item-search') private queue: Queue) {}
   async execute(
     input: ViewItemSearchInput,
@@ -27,7 +27,7 @@ export class ItemSearchUsecase {
       },
     );
 
-    const items = viewGeneral.data.items.slice(0, 10) as SearchKeywordItem[];
+    const items = viewGeneral.data.items as SearchKeywordItem[];
 
     const job: IViewItemSearchJob = {
       name: keyword,

@@ -18,7 +18,6 @@ export class ItemSearchConsumer {
   @Process('item-search')
   async execute(job: Job) {
     this.logger.log(`start consume item-search job`);
-
     const keywordEntity = new SearchKeyword(job.data);
     keywordEntity.type = CrawlSearchType.VIEW;
     await this.itemSearchTransaction.execute(keywordEntity, job.data.userCode);

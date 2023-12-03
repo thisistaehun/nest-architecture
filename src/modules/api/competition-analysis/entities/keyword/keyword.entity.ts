@@ -10,7 +10,7 @@ import { KeywordToUser } from './keyword-to-user.entity';
 @ObjectType()
 @Entity({ name: 'search_keyword' })
 export class SearchKeyword extends CommonEntity {
-  @Column({ name: 'name', type: 'varchar', length: 255, unique: true })
+  @Column({ name: 'name', type: 'varchar', length: 255, unique: false })
   @Field(() => String, {
     description: '검색 키워드',
   })
