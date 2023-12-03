@@ -78,10 +78,15 @@ jobs:
       - name: Restart server with pm2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ env.ELASTIC_IP }}
+          host: ${{ secrets.DEV_EC2_PRIVATE_IP }}
           username: ubuntu
-          key: ${{ env.SSH_KEY }}
+          key: ${{ secrets.SSH_KEY }}
           port: 22
+          debug: true
+          proxy_host: ${{ secrets.DEV_BASTION_PUBLIC_IP }}
+          proxy_username: ubuntu
+          proxy_key: ${{ secrets.SSH_KEY }}
+          proxy_port: 22
           script: |
             cd ${{ env.DEV_APPLICATION_PATH }}
             if yarn start:pm2; then
