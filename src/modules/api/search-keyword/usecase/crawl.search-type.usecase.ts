@@ -6,8 +6,7 @@ import { CrawlSearchType } from '../type/crawl.search-type';
 export class CrawlSearchTypeUsecase {
   async execute(keyword: string) {
     const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: 'new',
     });
     const page = await browser.newPage();
     await page.goto(
