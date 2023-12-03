@@ -91,15 +91,20 @@ export class PostAnalysisUsecase {
   }
 
   private findKeywords(input: PostAnalysisInput, arrayContents: string[]) {
+    // 키워드 정렬(긴 키워드부터)
+    const sortedKeywords = input.keywords.sort((a, b) => {
+      return b.length - a.length;
+    });
     const keywords = [];
 
-    for (const keyword of input.keywords) {
+    for (const keyword of sortedKeywords) {
       let keywordCount = 0;
       const morphemes = [];
       for (const content of arrayContents) {
         if (content.includes(keyword)) {
           keywordCount++;
           morphemes.push(content);
+          arrayContents.splice(arrayContents.indexOf(content), 1);
         }
       }
 

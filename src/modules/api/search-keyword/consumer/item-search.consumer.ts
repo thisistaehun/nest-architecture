@@ -30,30 +30,30 @@ export class ItemSearchConsumer {
 
   private async crawlType(keyword: string) {
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: 'new',
     });
     const page = await browser.newPage();
     await page.goto(
       `https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query=${keyword}`,
+    );
+
+    const data = await page.evaluate(() => {
+      const elements = Array.from(
+        document.querySelectorAll('.fds-comps-header-headline'),
       );
-      
-      const data = await page.evaluate(() => {
-        const elements = Array.from(
-          document.querySelectorAll('.fds-comps-header-headline'),
-          );
-          return elements.map((element) => element.textContent.trim());
-        });
-        this.logger.log(`sucessfully crawl search type`);
-        if (data.length === 0) {
-          return {
-            type: CrawlSearchType.VIEW,
-            data,
-          };
-        }
-        
-        return {
-          type: CrawlSearchType.AIR_SEARCH,
-          data,
+      return elements.map((element) => element.textContent.trim());
+    });
+    this.logger.log(`sucessfully crawl search type`);
+    if (data.length === 0) {
+      return {
+        type: CrawlSearchType.VIEW,
+        data,
+      };
+    }
+
+    return {
+      type: CrawlSearchType.AIR_SEARCH,
+      data,
     };
   }
 }

@@ -30,8 +30,9 @@ export class CrawlKeywordItemDetailUsecase {
   }
 
   private async crawlDetailPage(url: string): Promise<SearchKeywordDetail> {
-    const browser = await puppeteer.launch({});
-    this.logger.log('hi');
+    const browser = await puppeteer.launch({
+      headless: 'new',
+    });
     const page = await browser.newPage();
     await page.goto(url);
     this.logger.log(`Successfully go to the page ${url}`);

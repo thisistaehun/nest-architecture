@@ -1,6 +1,7 @@
 export type EnvVariables = {
   // SERVER
   NODE_ENV: string;
+  NODE_APP_INSTANCE: string;
   SERVER_PORT: string;
 
   // DATABASE

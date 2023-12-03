@@ -8,9 +8,10 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start:pm2": "pm2 start ecosystem.config.js",
     "start": "cross-env NODE_ENV=prod nest start",
     "start:local": "cross-env NODE_ENV=local nest start --watch",
-    "start:dev": "cross-env NODE_ENV=dev nest start --watch",
+    "start:dev": "cross-env NODE_ENV=dev nest start",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "docker:local": "cross-env ENVIRONMENT=local docker-compose -f docker-compose.yml --env-file ./config/.env.local up dg-database dg-redis --build -d",

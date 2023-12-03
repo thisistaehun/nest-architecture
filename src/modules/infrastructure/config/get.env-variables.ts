@@ -6,6 +6,7 @@ export const getEnvVariables = (): EnvVariables => {
   const variables: EnvVariables = {
     // SERVER
     NODE_ENV: env.NODE_ENV,
+    NODE_APP_INSTANCE: env.NODE_APP_INSTANCE,
     SERVER_PORT: env.SERVER_PORT,
 
     // DATABASE
