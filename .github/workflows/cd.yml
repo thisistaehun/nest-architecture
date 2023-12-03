@@ -49,7 +49,21 @@ jobs:
             else
               echo "Git pulled failed" && exit 1
             fi
-      - name: Restart server
+      # - name: Restart server with docker
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ env.ELASTIC_IP }}
+      #     username: ubuntu
+      #     key: ${{ env.SSH_KEY }}
+      #     port: 22
+      #     script: |
+      #       cd ${{ env.DEV_APPLICATION_PATH }}
+      #       if yarn docker:dev; then
+      #         echo "Server restarted successfully"
+      #       else
+      #         echo "Server restarted failed" && exit 1
+      #       fi
+      - name: Restart server with pm2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ env.ELASTIC_IP }}
@@ -58,7 +72,7 @@ jobs:
           port: 22
           script: |
             cd ${{ env.DEV_APPLICATION_PATH }}
-            if yarn docker:dev; then
+            if yarn start:pm2; then
               echo "Server restarted successfully"
             else
               echo "Server restarted failed" && exit 1

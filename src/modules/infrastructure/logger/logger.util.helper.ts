@@ -27,7 +27,10 @@ export class LoggerUtilHelper {
       };
     } else if (env === 'prod') {
       return {
-        transports: [...this.getTransportsForCloud(env, date)],
+        transports: [
+          ...this.getTransportsForCloud(env, date),
+          this.getTransportForConsole(env),
+        ],
       };
     } else {
       throw new Error('Invalid Environment');
