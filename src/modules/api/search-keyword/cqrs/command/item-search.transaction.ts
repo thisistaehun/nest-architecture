@@ -63,11 +63,11 @@ export class ItemSearchTransaction {
                   },
                 },
               });
-  
+
               const keywordToUser = user.keywordToUsers.find(
                 (keywordToUser) => keywordToUser.keyword.id === savedKeyword.id,
               );
-  
+
               if (!keywordToUser) {
                 await transactionManager.save(
                   KeywordToUser,
@@ -77,7 +77,7 @@ export class ItemSearchTransaction {
                   }),
                 );
               }
-  
+
               for (const item of savedKeyword.items) {
                 await transactionManager.delete(SearchKeywordItem, {
                   id: item.id,
@@ -89,7 +89,7 @@ export class ItemSearchTransaction {
           },
         );
       }
-  
+
       await this.entityManager.transaction(
         async (transactionManager: EntityManager) => {
           try {
@@ -101,7 +101,7 @@ export class ItemSearchTransaction {
                   keyword: savedKeyword,
                 }),
               );
-  
+
               await transactionManager.save(
                 SearchKeywordItemChannel,
                 transactionManager.create(SearchKeywordItemChannel, {

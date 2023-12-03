@@ -31,7 +31,8 @@ export class SearchKeywordResolver {
     private readonly searchKeywordService: SearchKeywordService,
   ) {}
   @Mutation(() => [SearchKeywordItem], {
-    description: '경쟁도 분석 검색 키워드로 키워드 TOP10 포스팅 검색을 진행합니다. (뷰, 에어 서치)'
+    description:
+      '경쟁도 분석 검색 키워드로 키워드 TOP10 포스팅 검색을 진행합니다. (뷰, 에어 서치)',
   })
   async itemSearch(
     @Args('input') input: ViewItemSearchInput,
@@ -41,14 +42,14 @@ export class SearchKeywordResolver {
   }
 
   @Mutation(() => [SmartBlockKeyword], {
-    description: '키워드로 스마트 블록 서치를 진행합니다. '
+    description: '키워드로 스마트 블록 서치를 진행합니다. ',
   })
   async smartBlockKeyword(@Args('keyword') keyword: string) {
     return this.smartBlockUsecase.execute(keyword);
   }
 
   @Mutation(() => [SearchKeywordItem], {
-    description: '스마트 블록 키워드로 아이템 서치를 진행합니다.'
+    description: '스마트 블록 키워드로 아이템 서치를 진행합니다.',
   })
   async smartBlockItemSearch(
     @Args('input') input: SmartBlockKeywordSearchInput,
@@ -57,21 +58,22 @@ export class SearchKeywordResolver {
   }
 
   @Mutation(() => [String], {
-    description: '특정 키워드에 대해 카테고리 값을 받아옵니다. '
+    description: '특정 키워드에 대해 카테고리 값을 받아옵니다. ',
   })
   async getKeywordCategory(@Args('keyword') keyword: string) {
     return this.getCategoryUsecase.execute(keyword);
   }
 
   @Mutation(() => CrawlSearchTypeOutput, {
-    description: '키워드 타입을 받아옵니다. (View or Air)'
+    description: '키워드 타입을 받아옵니다. (View or Air)',
   })
   async crawlSearchType(@Args('keyword') keyword: string) {
     return this.crawlSearchTypeUsecase.execute(keyword);
   }
 
   @Mutation(() => SearchKeywordDetail, {
-    description: '디테일한 아이템 서치를 진행합니다.(좋아요, 댓글, 본문, 장소, 인용 등의 길이)'
+    description:
+      '디테일한 아이템 서치를 진행합니다.(좋아요, 댓글, 본문, 장소, 인용 등의 길이)',
   })
   async crawlItemSearchDetail(@Args('url') url: string) {
     return this.crawlKeywordItemDetailUsecase.execute(url);
@@ -79,21 +81,21 @@ export class SearchKeywordResolver {
 
   @Query(() => [SearchKeyword], {
     description: '유저가 검색했던 키워드 목록(과 연결된 아이템)을 가져옵니다.',
-    nullable: true
+    nullable: true,
   })
   async searchKeywords(@CurrentUser('user') user: UserAuth) {
     return this.searchKeywordService.findSearchKeywords(user.code);
   }
 
   @Query(() => SearchKeyword, {
-    description: 'DB에 저장된 특정 키워드에 대한 아이템 목록을 검색합니다.'
+    description: 'DB에 저장된 특정 키워드에 대한 아이템 목록을 검색합니다.',
   })
   async searchKeyword(@Args('keyword') keyword: string) {
     return this.searchKeywordService.findSearchKeyword(keyword);
   }
 
   @Mutation(() => SearchKeywordStat, {
-    description: '키워드 검색량 및 클릭량 등을 가져옵니다. '
+    description: '키워드 검색량 및 클릭량 등을 가져옵니다. ',
   })
   async getKeywordStat(@Args('keyword') keyword: string) {
     return this.getStatUsecase.execute(keyword);

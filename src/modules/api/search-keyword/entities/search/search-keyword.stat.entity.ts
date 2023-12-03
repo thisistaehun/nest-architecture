@@ -2,7 +2,7 @@ import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { CommonBulkEntity } from 'src/modules/infrastructure/database/typeorm/common.bulk.entity';
 import { Column, Entity } from 'typeorm';
 
-@InputType({ isAbstract: true})
+@InputType({ isAbstract: true })
 @ObjectType()
 @Entity({ name: 'keyword_stat' })
 export class SearchKeywordStat extends CommonBulkEntity {

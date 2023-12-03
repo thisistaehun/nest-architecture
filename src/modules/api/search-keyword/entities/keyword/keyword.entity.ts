@@ -22,10 +22,7 @@ export class SearchKeyword extends CommonEntity {
   })
   type: CrawlSearchType;
 
-  @OneToMany(
-    () => SearchKeywordItem,
-    (keywordItems) => keywordItems.keyword,
-  )
+  @OneToMany(() => SearchKeywordItem, (keywordItems) => keywordItems.keyword)
   @Field(() => [SearchKeywordItem], {
     description: '검색 키워드 아이템',
   })

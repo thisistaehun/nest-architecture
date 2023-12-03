@@ -3,7 +3,6 @@ import { CommonBulkEntity } from 'src/modules/infrastructure/database/typeorm/co
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { SearchKeywordItemContent } from './search-keyword.item-content.entity';
 
-
 @InputType({ isAbstract: true })
 @ObjectType()
 @Entity({ name: 'keyword_item_content_tag' })

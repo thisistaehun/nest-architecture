@@ -6,7 +6,7 @@ import { SearchKeywordItem } from '../entities/search/search-keyword-item.entity
 
 @Injectable()
 export class SearchQueryRepository {
-  constructor(private readonly entityManager: EntityManager) { }
+  constructor(private readonly entityManager: EntityManager) {}
 
   async findSearchKeyword(name: string) {
     const keyword = await this.entityManager.findOne(SearchKeyword, {
@@ -16,13 +16,13 @@ export class SearchQueryRepository {
       relations: {
         items: {
           content: true,
-          channel: true
-        }
-      }
+          channel: true,
+        },
+      },
     });
 
     if (!keyword) {
-      throw new NotFoundCustomException('키워드로 저장된 데이터가 없습니다. ')
+      throw new NotFoundCustomException('키워드로 저장된 데이터가 없습니다. ');
     }
 
     return keyword;
@@ -33,18 +33,17 @@ export class SearchQueryRepository {
       where: {
         content: {
           url,
-        }
+        },
       },
       relations: {
         channel: true,
         content: true,
         detail: true,
-      }
-    })
+      },
+    });
 
     return item;
   }
-
 
   async findSearchKeywords(userCode: string) {
     const keywords = await this.entityManager.find(SearchKeyword, {

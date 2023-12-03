@@ -13,7 +13,7 @@ export function Transactional() {
   return function (
     target: object,
     propertyKey: string | symbol,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) {
     // 1. 원래 메서드를 PropertyDescriptor.value로 가져온다.
     const originMethod = descriptor.value;

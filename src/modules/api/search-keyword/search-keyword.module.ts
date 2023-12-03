@@ -30,7 +30,7 @@ import { SmartBlockUsecase } from './usecase/smart-block.usecase';
       name: 'item-search',
     }),
     BullModule.registerQueue({
-      name: 'item-detail'
+      name: 'item-detail',
     }),
     TypeOrmModule.forFeature([
       SearchKeyword,
