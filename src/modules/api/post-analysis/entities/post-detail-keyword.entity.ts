@@ -19,10 +19,16 @@ export class PostDetailKeyword extends CommonEntity {
   morphemes: string[];
 
   @Field(() => Int, {
-    description: '키워드 빈도수',
+    description: '키워드 자체 빈도수',
   })
   @Column({ name: 'frequency', type: 'int' })
   frequency: number;
+
+  @Field(() => Int, {
+    description: '키워드가 붙은 형태소의 빈도수',
+  })
+  @Column({ name: 'morpheme_frequency', type: 'int' })
+  morphemeFrequency: number;
 
   @ManyToOne(() => PostDetail, (postDetail) => postDetail.keywords, {
     onUpdate: 'CASCADE',
