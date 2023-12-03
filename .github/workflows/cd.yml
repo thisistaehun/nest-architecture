@@ -50,7 +50,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           debug: true
-          proxy_host: ${{ secrets.DEV_BASTION_PUBLIC_IP }}
+          proxy_host: ${{ secrets.DEV_BASTION_IP }}
           proxy_username: ubuntu
           proxy_key: ${{ secrets.SSH_KEY }}
           proxy_port: 22
@@ -83,7 +83,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           debug: true
-          proxy_host: ${{ secrets.DEV_BASTION_PUBLIC_IP }}
+          proxy_host: ${{ secrets.DEV_BASTION_IP }}
           proxy_username: ubuntu
           proxy_key: ${{ secrets.SSH_KEY }}
           proxy_port: 22
