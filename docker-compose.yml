@@ -1,12 +1,12 @@
 version: '3.8'
 services:
-  dg-server:
+  my-server:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         ENVIRONMENT: ${ENVIRONMENT}
-    container_name: dg-server
+    container_name: my-server
     working_dir: /proj
     volumes:
       - ./src:/src
@@ -15,11 +15,11 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     depends_on:
-      - dg-database
-      - dg-redis
-  dg-database:
+      - my-database
+      - my-redis
+  my-database:
     image: mysql:8.0.32
-    container_name: dg-database
+    container_name: my-database
     ports:
       - ${DATABASE_PORT}:3306
     environment:
@@ -32,9 +32,9 @@ services:
       - --default-authentication-plugin=mysql_native_password
     extra_hosts:
       - 'host.docker.internal:host-gateway'
-  dg-redis:
+  my-redis:
     image: redis:7
-    container_name: dg-redis
+    container_name: my-redis
     ports:
       - ${REDIS_PORT}:6379
     extra_hosts:
